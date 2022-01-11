@@ -1,11 +1,11 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Home.module.css';
-import NaviBar from '../partials/Navibar';
+import NaviBar from '../components/partials/Navibar';
 import {Container, Row, Col} from 'react-bootstrap'; 
 import {useState} from 'react'
-import Register from '../partials/register'
-import Login from '../partials/login'
+import Register from '../components/partials/register'
+import Login from '../components/partials/login'
 import img from '../components/images/enlargedhp.png';
 
 function Home() {
