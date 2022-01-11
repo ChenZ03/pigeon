@@ -43,7 +43,6 @@ function Login() {
 
   const [login, {loading, error, data}] = useMutation(LOGIN);
   // const {loading, error, data} = useQuery(GET_ALL_USERS);
-  console.log(data);
 
   return (
     <>
@@ -53,15 +52,15 @@ function Login() {
           <Form onSubmit={onSubmitHandler} className={styles.width}>
             <Form.Group>
               <Form.Label className={styles.formLabel}>Email address</Form.Label>
-              <Form.Control className={styles.formControl} type="email" placeholder="name@example.com" name="email" />
+              <Form.Control className={styles.formControl} type="email" placeholder="name@example.com" name="email" onChange={onChangeHandler}/>
             </Form.Group>
             <Form.Group>
               <Form.Label className={styles.formLabel}>Password</Form.Label>
-              <Form.Control className={styles.formControl} type="password" name="password" placeholder="Password" />
+              <Form.Control className={styles.formControl} type="password" name="password" placeholder="Password" onChange={onChangeHandler}/>
             </Form.Group>
             <small className="text-white">
               Don't have an account yet?{' '}
-              <a className="text-white" href="/login">
+              <a className="text-white" href="/register">
                 Sign up here
               </a>
             </small>
