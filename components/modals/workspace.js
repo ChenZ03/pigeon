@@ -1,5 +1,5 @@
 import {Modal, Button, Container, Form, Row, Col} from 'react-bootstrap';
-import styles from '../../../styles/Workspace.module.css';
+import styles from '../../styles/Workspace.module.css';
 
 function CenteredModal(props) {
   const onSubmitHandler = () => {};
@@ -27,7 +27,7 @@ function CenteredModal(props) {
               </Col>
               <Col lg="2">
                 <Button type="submit" className={styles.formButton}>
-                  {'>'}
+                  Create
                 </Button>
               </Col>
             </Row>

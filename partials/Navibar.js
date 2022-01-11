@@ -1,7 +1,7 @@
 import {Navbar, Container, Nav, Badge} from 'react-bootstrap';
 import logo from '../components/images/logo.png';
 import Image from 'next/image';
-import styles from '../../styles/Navbar.module.css';
+import styles from '../styles/Navbar.module.css';
 
 function NaviBar({setLogin, setHome}) {
   return (
@@ -17,36 +17,37 @@ function NaviBar({setLogin, setHome}) {
               pigeon
             </Nav.Link>
           </Nav>
-            {
-              typeof window !== "undefined" && 
-              localStorage.hasOwnProperty("userData") ? 
-              <Nav>
+          {typeof window !== 'undefined' && localStorage.hasOwnProperty('userData') ? (
+            <Nav>
               <Nav.Link href="/login" className={styles.navtext}>
                 Invites <Badge bg="secondary">0</Badge>
               </Nav.Link>
               <Nav.Link href="/register" className={styles.navtext}>
                 Logout
               </Nav.Link>
-              </Nav>
-              :
-              <Nav>
-               <Nav.Link className={styles.navtext} onClick={() => {
-                 setLogin(false)
-                 setHome(false)
-               }}>
+            </Nav>
+          ) : (
+            <Nav>
+              <Nav.Link
+                className={styles.navtext}
+                onClick={() => {
+                  setLogin(false);
+                  setHome(false);
+                }}
+              >
                 Register
               </Nav.Link>
-              <Nav.Link className={styles.navtext} onClick={() => {
-                setLogin(true)
-                setHome(false)
-              }}>
+              <Nav.Link
+                className={styles.navtext}
+                onClick={() => {
+                  setLogin(true);
+                  setHome(false);
+                }}
+              >
                 Login
               </Nav.Link>
-              </Nav>
-             
-            }
-            
-  
+            </Nav>
+          )}
         </Navbar.Collapse>
       </Container>
     </Navbar>

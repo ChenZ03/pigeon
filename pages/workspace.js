@@ -1,10 +1,10 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Workspace.module.css';
-import NaviBar from './partials/Navibar';
+import NaviBar from '../partials/Navibar';
 import {Container, Row, Col, Button} from 'react-bootstrap';
-import CenteredModal from './components/modals/workspace';
-import img from './components/images/workspace.png';
+import CenteredModal from '../components/modals/workspace';
+import img from '../components/images/workspace.png';
 import {useState} from 'react';
 
 export default function Home() {
