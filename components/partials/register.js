@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {gql, useMutation} from '@apollo/client';
 import {Form, Button, Container} from 'react-bootstrap';
 import styles from '../../styles/Register.module.css';
@@ -13,10 +13,9 @@ function Register({setLogin}) {
       register({
         variables: user,
       });
-      alert("registered successfully")
       e.target.reset();
     } else {
-      alert("error")
+      alert("Password must be the same")
     }
   };
 
@@ -33,7 +32,20 @@ function Register({setLogin}) {
     }
   `;
 
-  const [register] = useMutation(REGISTER);
+  const [register, {data, loading, error}] = useMutation(REGISTER,{
+    onError: () => error
+  });
+
+  useEffect(() => {
+    if(error) alert(error.message);
+  }, [error])
+
+  useEffect(() => {
+    if(data) {
+      alert("Registered successfully, please proceed to login")
+      setLogin(true)
+    }
+  }, [data])
 
   return (
     <>

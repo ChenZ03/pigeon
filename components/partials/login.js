@@ -3,7 +3,7 @@ import {gql, useMutation, useQuery} from '@apollo/client';
 import {Form, Button} from 'react-bootstrap';
 import styles from '../../styles/Register.module.css';
 
-function Login({setLogin}) {
+function Login({setLogin, loginHandler}) {
   const [user, setUser] = useState({});
 
   const LOGIN = gql`
@@ -14,12 +14,13 @@ function Login({setLogin}) {
     }
   `
   const [login, { data, loading, error }] = useMutation(LOGIN,{
-    onError: () => alert("Invalid Credentials")
+    onError: () => error
   });
   // const [allUsers, setAllUsers] = useState({});
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
+    console.log(user)
       login({
         variables: user,
       });
@@ -31,8 +32,17 @@ function Login({setLogin}) {
   };
 
   useEffect(() => {
-    console.log(data)
+    if(data) {
+      alert("Login Successfully")
+      loginHandler(data.login.token)
+    }
   }, [data])
+
+  useEffect(() => {
+    if(error){
+      alert(error)
+    }
+  }, [error])
   
 
   // const GET_ALL_USERS = gql`
