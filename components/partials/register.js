@@ -43,11 +43,11 @@ function Register({setLogin, loginHandler}) {
     }
   `
 
-  const [register, {data, loading, error}] = useMutation(REGISTER,{
+  var [register, {data, loading, error}] = useMutation(REGISTER,{
     onError: () => error
   });
 
-  const [googleLogin, {data, loading, error}] = useMutation(GOOGLELOGIN, {
+  var [googleLogin, {data, loading, error}] = useMutation(GOOGLELOGIN, {
     onError: () => error
   })
 

@@ -25,11 +25,11 @@ function Login({setLogin, loginHandler}) {
     }
   `
 
-  const [login, { data, loading, error }] = useMutation(LOGIN,{
+  var [login, { data, loading, error }] = useMutation(LOGIN,{
     onError: () => error
   });
 
-  const [googleLogin, {data, loading, error}] = useMutation(GOOGLELOGIN, {
+  var [googleLogin, {data, loading, error}] = useMutation(GOOGLELOGIN, {
     onError: () => error
   })
 
