@@ -4,7 +4,7 @@ import styles from '../styles/Home.module.css';
 import NaviBar from '../components/partials/Navibar';
 import jwt_decode from 'jwt-decode'
 import {Container, Row, Col} from 'react-bootstrap'; 
-import {useState} from 'react'
+import {useState, useEffect, useRef} from 'react'
 import Register from '../components/partials/register'
 import Login from '../components/partials/login'
 import img from '../components/images/enlargedhp.png';
@@ -14,6 +14,7 @@ function Home() {
   const [home, setHome] = useState(true)
   const [login, setLogin] = useState()
 
+
   const loginHandler = token => {
     let decoded = jwt_decode(token)
 
@@ -21,6 +22,7 @@ function Home() {
     localStorage.setItem('token', token)
     Router.push('/workspace')
   }
+
 
   return (
     <>
@@ -56,14 +58,16 @@ function Home() {
                 }}>
                   Login
                 </button>
+               
               </Col>
             </Row>
             :
             login ?
             <Login setLogin={setLogin} loginHandler={loginHandler} />
             :
-            <Register setLogin={setLogin} />
+            <Register setLogin={setLogin} loginHandler={loginHandler} />
           }
+
           
         </Container>
       </div>

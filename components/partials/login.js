@@ -1,10 +1,13 @@
-import {useState, useEffect } from 'react';
+import {useState, useEffect, useRef } from 'react';
 import {gql, useMutation, useQuery} from '@apollo/client';
 import {Form, Button} from 'react-bootstrap';
 import styles from '../../styles/Register.module.css';
+import jwt_decode from 'jwt-decode'
 
 function Login({setLogin, loginHandler}) {
   const [user, setUser] = useState({});
+  const clientId = '137944324026-ku0kjalf18s7c9r7qfaum4amgcahjlh4.apps.googleusercontent.com'
+  const btnDivRef = useRef()
 
   const LOGIN = gql`
     mutation login($email: String!, $password: String!) {
@@ -13,10 +16,22 @@ function Login({setLogin, loginHandler}) {
       }
     }
   `
+
+  const GOOGLELOGIN = gql`
+    mutation GoogleLogin($email : String!) {
+      googleLogin (user : {email : $email}) {
+        token
+      }
+    }
+  `
+
   const [login, { data, loading, error }] = useMutation(LOGIN,{
     onError: () => error
   });
-  // const [allUsers, setAllUsers] = useState({});
+
+  const [googleLogin, {data, loading, error}] = useMutation(GOOGLELOGIN, {
+    onError: () => error
+  })
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -33,8 +48,12 @@ function Login({setLogin, loginHandler}) {
 
   useEffect(() => {
     if(data) {
-      alert("Login Successfully")
-      loginHandler(data.login.token)
+      if(data.googleLogin.token){
+        loginHandler(data.googleLogin.token)
+      }else{
+        alert("Login Successfully")
+        loginHandler(data.login.token)
+      }
     }
   }, [data])
 
@@ -44,18 +63,44 @@ function Login({setLogin, loginHandler}) {
     }
   }, [error])
   
+  useEffect(() => { 
+      const handleGoogleSignIn = async res => {
+          let decoded = jwt_decode(res.credential)  
+          googleLogin({
+            variables : {
+              email : decoded.email,
+              username : decoded.username
+            }
+          })
+      }
 
-  // const GET_ALL_USERS = gql`
-  //   query {
-  //     getAllUsers {
-  //       email
-  //       password
-  //     }
-  //   }
-  // `;
+      const initializeGsi = _ => {
+          if(!window.google) return;
+        
+          window.google.accounts.id.initialize({
+          client_id: clientId,
+          callback: handleGoogleSignIn
+          });
+          window.google.accounts.id.renderButton(
+          btnDivRef.current,
+          { theme: "outline", size: "large" }  // customization attributes
+          );
 
- 
-  // const {loading, error, data} = useQuery(GET_ALL_USERS);
+      }
+
+      const script = document.createElement('script')
+      script.src = "https://accounts.google.com/gsi/client"
+      script.onload = initializeGsi
+      script.async = true
+      script.id = 'google-script'
+      document.querySelector('head')?.appendChild(script)
+
+      return _ => {
+          document.getElementById("google-script")?.remove()
+          window.google?.accounts.id.cancel()
+      }
+  }, [])
+  
   return (
     <>
       <div className={styles.container}>
@@ -79,6 +124,9 @@ function Login({setLogin, loginHandler}) {
             <Button type="submit" className={styles.formButton}>
               Login
             </Button>
+            <div>
+              <div id="buttonDiv" className="d-flex justify-content-center p-3 m-3" ref={btnDivRef}></div>
+            </div>
           </Form>
       </div>
     </>

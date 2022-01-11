@@ -1,10 +1,13 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import {gql, useMutation} from '@apollo/client';
 import {Form, Button, Container} from 'react-bootstrap';
 import styles from '../../styles/Register.module.css';
+import jwt_decode from 'jwt-decode'
 
-function Register({setLogin}) {
+function Register({setLogin, loginHandler}) {
   const [user, setUser] = useState({});
+  const clientId = '137944324026-ku0kjalf18s7c9r7qfaum4amgcahjlh4.apps.googleusercontent.com'
+  const btnDivRef = useRef()
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -32,9 +35,21 @@ function Register({setLogin}) {
     }
   `;
 
+  const GOOGLELOGIN = gql`
+    mutation GoogleLogin($email : String!) {
+      googleLogin (user : {email : $email}) {
+        token
+      }
+    }
+  `
+
   const [register, {data, loading, error}] = useMutation(REGISTER,{
     onError: () => error
   });
+
+  const [googleLogin, {data, loading, error}] = useMutation(GOOGLELOGIN, {
+    onError: () => error
+  })
 
   useEffect(() => {
     if(error) alert(error.message);
@@ -42,10 +57,54 @@ function Register({setLogin}) {
 
   useEffect(() => {
     if(data) {
-      alert("Registered successfully, please proceed to login")
-      setLogin(true)
+      if(data.googleLogin.token){
+        loginHandler(data.googleLogin.token)
+      }else{
+        alert("Registered successfully, please proceed to login")
+        setLogin(true)
+      }
+      
     }
   }, [data])
+
+  
+  useEffect(() => { 
+      const handleGoogleSignIn = async res => {
+          let decoded = jwt_decode(res.credential)  
+          googleLogin({
+            variables : {
+              email : decoded.email,
+              username : decoded.username
+            }
+          })
+      }
+
+      const initializeGsi = _ => {
+          if(!window.google) return;
+        
+          window.google.accounts.id.initialize({
+          client_id: clientId,
+          callback: handleGoogleSignIn
+          });
+          window.google.accounts.id.renderButton(
+          btnDivRef.current,
+          { theme: "outline", size: "large" }  // customization attributes
+          );
+
+      }
+
+      const script = document.createElement('script')
+      script.src = "https://accounts.google.com/gsi/client"
+      script.onload = initializeGsi
+      script.async = true
+      script.id = 'google-script'
+      document.querySelector('head')?.appendChild(script)
+
+      return _ => {
+          document.getElementById("google-script")?.remove()
+          window.google?.accounts.id.cancel()
+      }
+  }, [])
 
   return (
     <>
@@ -103,6 +162,9 @@ function Register({setLogin}) {
               Register
             </Button>
           </Form>
+          <div>
+            <div id="buttonDiv" className="d-flex justify-content-center p-3 m-3" ref={btnDivRef}></div>
+          </div>
       </div>
     </>
   );
