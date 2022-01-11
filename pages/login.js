@@ -1,10 +1,49 @@
-import styles from '../styles/Register.module.css';
+import {useState} from 'react';
+import {gql, useMutation, useQuery} from '@apollo/client';
 import {Form, Button, Container} from 'react-bootstrap';
+import styles from '../styles/Register.module.css';
 import NaviBar from './partials/Navibar';
 
 function Login() {
-  const onSubmitHandler = () => {};
-  const onChangeHandler = () => {};
+  const [user, setUser] = useState({});
+  // const [allUsers, setAllUsers] = useState({});
+
+  const onSubmitHandler = (e) => {
+    console.log(user);
+    // if (user.password === user.password2) {
+    login({
+      variables: user,
+    });
+    e.target.reset();
+    // } else {
+    //   alert('error');
+    // }
+  };
+
+  const onChangeHandler = (e) => {
+    setUser({...user, [e.target.name]: e.target.value});
+  };
+
+  const LOGIN = gql`
+    mutation login($email: String!, $password: String!) {
+      login(user: {email: $email, password: $password}) {
+        token
+      }
+    }
+  `;
+
+  // const GET_ALL_USERS = gql`
+  //   query {
+  //     getAllUsers {
+  //       email
+  //       password
+  //     }
+  //   }
+  // `;
+
+  const [login, {loading, error, data}] = useMutation(LOGIN);
+  // const {loading, error, data} = useQuery(GET_ALL_USERS);
+  console.log(data);
 
   return (
     <>
