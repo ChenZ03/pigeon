@@ -2,6 +2,8 @@ import {Navbar, Container, Nav, Badge} from 'react-bootstrap';
 import logo from '../images/logo.png';
 import Image from 'next/image';
 import styles from '../../styles/Navbar.module.css';
+import Router from 'next/router'
+import { resolveReadonlyArrayThunk } from 'graphql';
 
 function NaviBar({setLogin, setHome}) {
   return (
@@ -22,7 +24,11 @@ function NaviBar({setLogin, setHome}) {
               <Nav.Link href="/login" className={styles.navtext}>
                 Invites <Badge bg="secondary">0</Badge>
               </Nav.Link>
-              <Nav.Link href="/register" className={styles.navtext}>
+              <Nav.Link className={styles.navtext} onClick={() => {
+                localStorage.removeItem('userData')
+                localStorage.removeItem('token')
+                Router.push('/')
+              }}>
                 Logout
               </Nav.Link>
             </Nav>
