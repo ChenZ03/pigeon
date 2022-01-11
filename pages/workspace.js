@@ -1,11 +1,14 @@
 import Head from 'next/head';
 import Image from 'next/image';
-import styles from '../styles/Home.module.css';
+import styles from '../styles/Workspace.module.css';
 import NaviBar from './partials/Navibar';
-import {Container, Row, Col} from 'react-bootstrap';
+import {Container, Row, Col, Button} from 'react-bootstrap';
+import CenteredModal from './components/modals/workspace';
 import img from './components/images/workspace.png';
+import {useState} from 'react';
 
 export default function Home() {
+  const [modalShow, setModalShow] = useState(false);
   return (
     <>
       <NaviBar />
@@ -25,9 +28,11 @@ export default function Home() {
                 </p>
               </div>
 
-              <a href="/" className={`btn ${styles.btnLight}`}>
-                Create workspace
-              </a>
+              <Button variant="primary" onClick={() => setModalShow(true)} className={`btn ${styles.btnLight}`}>
+                Create A Workspace
+              </Button>
+
+              <CenteredModal show={modalShow} onHide={() => setModalShow(false)} />
             </Col>
           </Row>
         </Container>
