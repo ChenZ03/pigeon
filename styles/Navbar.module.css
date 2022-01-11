@@ -1,0 +1,13 @@
+.navbarBackground {
+    background-color: #9ec4e6;
+}
+
+.navtext {
+    color: whitesmoke !important;
+}
+
+.navbrand {
+    color: whitesmoke !important;
+    font-size: 20px;
+    font-weight: bold;
+}
