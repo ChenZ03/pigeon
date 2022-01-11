@@ -1,10 +1,9 @@
 import {useState} from 'react';
 import {gql, useMutation} from '@apollo/client';
 import {Form, Button, Container} from 'react-bootstrap';
-import styles from '../styles/Register.module.css';
-import NaviBar from './partials/Navibar';
+import styles from '../../styles/Register.module.css';
 
-function Register() {
+function Register({setLogin}) {
   const [user, setUser] = useState({});
 
   const onSubmitHandler = (e) => {
@@ -38,9 +37,7 @@ function Register() {
 
   return (
     <>
-      <NaviBar />
       <div className={styles.container}>
-        <Container>
           <Form onSubmit={onSubmitHandler} className={styles.width}>
             <Form.Group>
               <Form.Label className={styles.formLabel}>Email address</Form.Label>
@@ -84,7 +81,9 @@ function Register() {
             </Form.Group>
             <small className="text-white">
               Already have an account?{' '}
-              <a className="text-white" href="/login">
+              <a className={styles.atext} onClick={() => {
+                setLogin(true)
+              }}>
                 Sign in here
               </a>
             </small>
@@ -92,7 +91,6 @@ function Register() {
               Register
             </Button>
           </Form>
-        </Container>
       </div>
     </>
   );

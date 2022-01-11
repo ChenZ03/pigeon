@@ -43,3 +43,8 @@
     min-width: 375px;
     margin-top: 25px;
 }
+
+.atext{
+    color : white !important;
+    cursor : pointer;
+}

@@ -1,10 +1,9 @@
 import {useState} from 'react';
 import {gql, useMutation, useQuery} from '@apollo/client';
-import {Form, Button, Container} from 'react-bootstrap';
-import styles from '../styles/Register.module.css';
-import NaviBar from './partials/Navibar';
+import {Form, Button} from 'react-bootstrap';
+import styles from '../../styles/Register.module.css';
 
-function Login() {
+function Login({setLogin}) {
   const [user, setUser] = useState({});
   // const [allUsers, setAllUsers] = useState({});
 
@@ -46,9 +45,7 @@ function Login() {
 
   return (
     <>
-      <NaviBar />
       <div className={styles.container}>
-        <Container>
           <Form onSubmit={onSubmitHandler} className={styles.width}>
             <Form.Group>
               <Form.Label className={styles.formLabel}>Email address</Form.Label>
@@ -60,7 +57,9 @@ function Login() {
             </Form.Group>
             <small className="text-white">
               Don't have an account yet?{' '}
-              <a className="text-white" href="/register">
+              <a className={styles.atext} onClick={() =>{
+                setLogin(false)
+              }}>
                 Sign up here
               </a>
             </small>
@@ -68,7 +67,6 @@ function Login() {
               Login
             </Button>
           </Form>
-        </Container>
       </div>
     </>
   );
