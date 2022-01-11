@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {gql, useMutation} from '@apollo/client';
 import {Form, Button, Container} from 'react-bootstrap';
-import styles from '../styles/Register.module.css';
+import styles from '../../styles/Register.module.css';
 
 function Register({setLogin}) {
   const [user, setUser] = useState({});

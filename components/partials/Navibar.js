@@ -1,7 +1,7 @@
 import {Navbar, Container, Nav, Badge} from 'react-bootstrap';
-import logo from '../components/images/logo.png';
+import logo from '../images/logo.png';
 import Image from 'next/image';
-import styles from '../styles/Navbar.module.css';
+import styles from '../../styles/Navbar.module.css';
 
 function NaviBar({setLogin, setHome}) {
   return (
