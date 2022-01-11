@@ -17,31 +17,30 @@ function NaviBar() {
               pigeon
             </Nav.Link>
           </Nav>
-          <Nav>
             {
-              localStorage.hasOwnProperty('userData') ?
-              <>
+              typeof window !== "undefined" && 
+              localStorage.hasOwnProperty("userData") ? 
+              <Nav>
               <Nav.Link href="/login" className={styles.navtext}>
                 Invites <Badge bg="secondary">0</Badge>
               </Nav.Link>
               <Nav.Link href="/register" className={styles.navtext}>
                 Logout
               </Nav.Link>
-              </>
+              </Nav>
               :
-              <>
+              <Nav>
                <Nav.Link href="/register" className={styles.navtext}>
                 Register
               </Nav.Link>
               <Nav.Link href="/login" className={styles.navtext}>
                 Login
               </Nav.Link>
-              </>
+              </Nav>
              
             }
             
-            
-          </Nav>
+  
         </Navbar.Collapse>
       </Container>
     </Navbar>
