@@ -1,9 +1,50 @@
 import {Modal, Button, Container, Form, Row, Col} from 'react-bootstrap';
 import styles from '../../styles/Workspace.module.css';
+import {gql, useMutation} from '@apollo/client';
+import {useEffect} from 'react'
 
 function CenteredModal(props) {
-  const onSubmitHandler = () => {};
-  const onChangeHandler = () => {};
+  const onSubmitHandler = (e) => {
+    e.preventDefault();
+    let workspace = document.getElementById('workspace').value;
+    let userId = JSON.parse(localStorage.getItem('userData')).user.id
+    if(workspace.length < 1){
+      alert("Workspace name must be at least one character")
+    }else{
+      createWorkspace({
+        variables : {
+          name : workspace,
+          user : userId
+        }
+      })
+    }
+  };
+
+
+  const CREATEWORKSPACE = gql`
+    mutation CreateWorkspace($name : String!, $user : String!){
+      createWorkspace(workspace : {name : $name, user : $user}){
+        id
+        name
+        owner
+      }
+    }
+  `
+
+  const [createWorkspace, {error, loading, data}] = useMutation(CREATEWORKSPACE, {
+    onError : () => error
+  })
+
+  useEffect(() => {
+    if(error){
+      alert(error)
+    }
+
+    if(data){
+      alert("Workspace created successfully")
+      props.onHide()
+    }
+  }, [error, data])
 
   return (
     <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
@@ -22,6 +63,7 @@ function CenteredModal(props) {
                     type="text"
                     placeholder="Workspace Name"
                     name="workspace"
+                    id="workspace"
                   />
                 </Form.Group>
               </Col>
