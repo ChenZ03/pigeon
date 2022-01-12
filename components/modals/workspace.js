@@ -1,50 +1,49 @@
 import {Modal, Button, Container, Form, Row, Col} from 'react-bootstrap';
 import styles from '../../styles/Workspace.module.css';
 import {gql, useMutation} from '@apollo/client';
-import {useEffect} from 'react'
+import {useEffect} from 'react';
 
 function CenteredModal(props) {
   const onSubmitHandler = (e) => {
     e.preventDefault();
     let workspace = document.getElementById('workspace').value;
-    let userId = JSON.parse(localStorage.getItem('userData')).user.id
-    if(workspace.length < 1){
-      alert("Workspace name must be at least one character")
-    }else{
+    let userId = JSON.parse(localStorage.getItem('userData')).user.id;
+    if (workspace.length < 1) {
+      alert('Workspace name must be at least one character');
+    } else {
       createWorkspace({
-        variables : {
-          name : workspace,
-          user : userId
-        }
-      })
+        variables: {
+          name: workspace,
+          user: userId,
+        },
+      });
     }
   };
 
-
   const CREATEWORKSPACE = gql`
-    mutation CreateWorkspace($name : String!, $user : String!){
-      createWorkspace(workspace : {name : $name, user : $user}){
+    mutation CreateWorkspace($name: String!, $user: String!) {
+      createWorkspace(workspace: {name: $name, user: $user}) {
         id
         name
         owner
       }
     }
-  `
+  `;
 
   const [createWorkspace, {error, loading, data}] = useMutation(CREATEWORKSPACE, {
-    onError : () => error
-  })
+    onError: () => error,
+  });
 
   useEffect(() => {
-    if(error){
-      alert(error)
+    if (error) {
+      alert(error);
     }
 
-    if(data){
-      alert("Workspace created successfully")
-      props.onHide()
+    if (data) {
+      alert('Workspace created successfully');
+      props.onHide();
     }
-  }, [error, data])
+  }, [error, data]);
 
   return (
     <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
@@ -57,7 +56,6 @@ function CenteredModal(props) {
             <Row>
               <Col lg="10">
                 <Form.Group>
-                  <Form.Label>Workspace Name</Form.Label>
                   <Form.Control
                     className={styles.formControl}
                     type="text"

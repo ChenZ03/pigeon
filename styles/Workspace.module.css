@@ -8,7 +8,7 @@
 }
 
 .img {
-    padding-top: 160px;
+    padding-top: 160px !important;
     padding-left: 100px;
 }
 
@@ -55,5 +55,72 @@
     background-color: #9ec4e6 !important;
     color: white !important;
     margin-top: 25px;
+    border: none;
+}
+
+.circle {
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    padding: 10px;
+    background: whitesmoke;
+    color: #000;
+    text-align: center;
+    font-size: 40px;
+}
+
+.workspaceName {
+    padding: 20px;
+    margin-left: 15px;
+    font-size: 25px;
+}
+
+.launchButton {
+    margin-top: 15px;
+    padding: 10px;
+    position: absolute;
+    right: 10px;
+    background-color: #9ec4e6;
+    color: white;
+}
+
+.launchButton:hover {
+    color: white !important;
+    background-color: lavender;
+}
+
+.relative {
+    position: relative;
+}
+
+.workspaceCard {
+    margin-top: 10px;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+.addWorkspace {
+    margin-top: 10px;
+    padding: 20px;
+    border-radius: 15px;
+    height: 150px;
+    align-items: center;
+    width: 100%;
+    background-color: white;
+    border: none;
+    color: #9ec4e6;
+    outline: 3px dashed #9ec4e6;
+    outline-offset: -20px;
+}
+
+.addWorkspace:hover {
+    background-color: white;
+    color: #9ec4e6;
+}
+
+.addWorkspace:focus {
+    background-color: white;
+    color: #9ec4e6;
+    box-shadow: none;
     border: none;
 }
