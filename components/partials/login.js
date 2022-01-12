@@ -25,17 +25,17 @@ function Login({setLogin, loginHandler}) {
     }
   `
 
-  var [login, { data, loading, error }] = useMutation(LOGIN,{
-    onError: () => error
+  const [googleLogin, glogin] = useMutation(GOOGLELOGIN, {
+    onError: () => glogin.error
+  })
+
+  const [login, loginData] = useMutation(LOGIN, {
+    onError : () => loginData.error
   });
 
-  var [googleLogin, {data, loading, error}] = useMutation(GOOGLELOGIN, {
-    onError: () => error
-  })
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    console.log(user)
       login({
         variables: user,
       });
@@ -47,21 +47,26 @@ function Login({setLogin, loginHandler}) {
   };
 
   useEffect(() => {
-    if(data) {
-      if(data.googleLogin.token){
-        loginHandler(data.googleLogin.token)
-      }else{
-        alert("Login Successfully")
-        loginHandler(data.login.token)
-      }
+    if(loginData.error){
+      alert(loginData.error)
     }
-  }, [data])
+
+    if(loginData.data){
+      alert("Login Successfully")
+      loginHandler(loginData.data.login.token)
+    }
+  }, [loginData.data, loginData.error])
 
   useEffect(() => {
-    if(error){
-      alert(error)
+    if(glogin.error){
+      alert(glogin.error)
     }
-  }, [error])
+
+    if(glogin.data){
+      alert("Login Successfully")
+      loginHandler(glogin.data.googleLogin.token)
+    }
+  }, [glogin.data, glogin.error])
   
   useEffect(() => { 
       const handleGoogleSignIn = async res => {

@@ -43,29 +43,35 @@ function Register({setLogin, loginHandler}) {
     }
   `
 
-  var [register, {data, loading, error}] = useMutation(REGISTER,{
-    onError: () => error
+  const [register, registerdata] = useMutation(REGISTER,{
+    onError: () => registerdata.error
   });
 
-  var [googleLogin, {data, loading, error}] = useMutation(GOOGLELOGIN, {
-    onError: () => error
+  const [googleLogin, glogin] = useMutation(GOOGLELOGIN, {
+    onError: () => glogin.error
   })
 
   useEffect(() => {
-    if(error) alert(error.message);
-  }, [error])
+    if(glogin.error){
+      alert(glogin.error)
+    }
+
+    if(glogin.data){
+      alert("Login Successfully")
+      loginHandler(glogin.data.googleLogin.token)
+    }
+  }, [glogin.data, glogin.error])
 
   useEffect(() => {
-    if(data) {
-      if(data.googleLogin.token){
-        loginHandler(data.googleLogin.token)
-      }else{
-        alert("Registered successfully, please proceed to login")
-        setLogin(true)
-      }
-      
+    if(registerdata.data) {
+      alert("Registered successfully, please proceed to login")
+      setLogin(true)
     }
-  }, [data])
+
+    if(registerdata.error){
+      alert(registerdata.error)
+    }
+  }, [registerdata.data, registerdata.error])
 
   
   useEffect(() => { 
