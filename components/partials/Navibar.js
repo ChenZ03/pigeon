@@ -2,10 +2,14 @@ import {Navbar, Container, Nav, Badge} from 'react-bootstrap';
 import logo from '../images/logo.png';
 import Image from 'next/image';
 import styles from '../../styles/Navbar.module.css';
-import Router from 'next/router'
-import { resolveReadonlyArrayThunk } from 'graphql';
+import Router from 'next/router';
+import {resolveReadonlyArrayThunk} from 'graphql';
+import {useState} from 'react';
+import InvitesModal from '../modals/invites';
 
 function NaviBar({setLogin, setHome}) {
+  const [modalShow, setModalShow] = useState(false);
+
   return (
     <Navbar collapseOnSelect expand="lg" className={styles.navbarBackground} variant="dark">
       <Container>
@@ -21,14 +25,26 @@ function NaviBar({setLogin, setHome}) {
           </Nav>
           {typeof window !== 'undefined' && localStorage.hasOwnProperty('userData') ? (
             <Nav>
-              <Nav.Link href="/login" className={styles.navtext}>
+              <Nav.Link
+                href="/workspace"
+                className={styles.navtext}
+                onClick={() => {
+                  setModalShow(true);
+                }}
+              >
                 Invites <Badge bg="secondary">0</Badge>
               </Nav.Link>
-              <Nav.Link className={styles.navtext} onClick={() => {
-                localStorage.removeItem('userData')
-                localStorage.removeItem('token')
-                Router.push('/')
-              }}>
+
+              <InvitesModal show={modalShow} onHide={() => setModalShow(false)} />
+
+              <Nav.Link
+                className={styles.navtext}
+                onClick={() => {
+                  localStorage.removeItem('userData');
+                  localStorage.removeItem('token');
+                  Router.push('/');
+                }}
+              >
                 Logout
               </Nav.Link>
             </Nav>

@@ -124,3 +124,35 @@
     box-shadow: none;
     border: none;
 }
+
+.endButtons {
+    position: absolute;
+    right: 15px;
+    padding-top: 20px;
+}
+
+.accept {
+    background-color: #9ec4e6;
+    color: white;
+    border: none;
+}
+.accept:hover {
+    background-color: #9ec4e6;
+}
+.accept:focus {
+    background-color: #9ec4e6;
+    box-shadow: none;
+}
+
+.decline {
+    background-color: lightgray;
+    color: white;
+    border: none;
+}
+.decline:hover {
+    background-color: lightgray;
+}
+.decline:focus {
+    background-color: lightgray;
+    box-shadow: none;
+}
