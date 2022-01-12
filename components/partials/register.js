@@ -51,6 +51,8 @@ function Register({setLogin, loginHandler}) {
     onError: () => glogin.error
   })
 
+
+  // Google
   useEffect(() => {
     if(glogin.error){
       alert(glogin.error)
