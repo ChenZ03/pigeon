@@ -1,7 +1,7 @@
 import {useRouter} from 'next/router';
-import NaviBar from '../../components/partials/Navibar';
+import MainNav from '../../components/partials/MainNav';
 import {Nav, Navbar, Container, Row, Col, Form, Button} from 'react-bootstrap';
-import styles from '../styles/WorkspaceChat.module.css';
+import styles from '../../styles/WorkspaceChat.module.css';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {useState} from 'react';
 
@@ -12,14 +12,14 @@ function WorkspaceChat() {
 
   return (
     <>
-      <NaviBar />
+      <MainNav />
       <Row>
         <Col lg="2">
           <Nav defaultActiveKey="/workspace" className={styles.sideNav}>
             <Navbar.Brand className={styles.navBrand} href="/workspace">
               Active
             </Navbar.Brand>
-            <Nav.Link className={styles.navLink} href="/taskboard">
+            <Nav.Link className={styles.navLink} href="/workspace/taskboard/1">
               Task Board
             </Nav.Link>
 

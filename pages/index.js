@@ -1,36 +1,33 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Home.module.css';
-import NaviBar from '../components/partials/Navibar';
-import jwt_decode from 'jwt-decode'
-import {Container, Row, Col} from 'react-bootstrap'; 
-import {useState, useEffect, useRef} from 'react'
-import Register from '../components/partials/register'
-import Login from '../components/partials/login'
+import MainNav from '../components/partials/MainNav';
+import jwt_decode from 'jwt-decode';
+import {Container, Row, Col} from 'react-bootstrap';
+import {useState, useEffect, useRef} from 'react';
+import Register from '../components/partials/register';
+import Login from '../components/partials/login';
 import img from '../components/images/enlargedhp.png';
-import Router from 'next/router'
+import Router from 'next/router';
 
 function Home() {
-  const [home, setHome] = useState(true)
-  const [login, setLogin] = useState()
+  const [home, setHome] = useState(true);
+  const [login, setLogin] = useState();
 
+  const loginHandler = (token) => {
+    let decoded = jwt_decode(token);
 
-  const loginHandler = token => {
-    let decoded = jwt_decode(token)
-
-    localStorage.setItem('userData', JSON.stringify(decoded))
-    localStorage.setItem('token', token)
-    Router.push('/workspace')
-  }
-
+    localStorage.setItem('userData', JSON.stringify(decoded));
+    localStorage.setItem('token', token);
+    Router.push('/workspace');
+  };
 
   return (
     <>
-      <NaviBar setLogin={setLogin} setHome={setHome}/>
+      <MainNav setLogin={setLogin} setHome={setHome} />
       <div className={styles.container}>
         <Container>
-          {
-            home ?
+          {home ? (
             <Row>
               <Col lg="6" className={styles.img}>
                 <Image src={img} alt="#" width={400} height={400} />
@@ -45,34 +42,36 @@ function Home() {
                   </p>
                 </div>
 
-                <button className={`btn ${styles.btnLight}`} onClick={() => {
-                    setHome(false)
-                    setLogin(false)
-                }}>
+                <button
+                  className={`btn ${styles.btnLight}`}
+                  onClick={() => {
+                    setHome(false);
+                    setLogin(false);
+                  }}
+                >
                   Register
                 </button>
                 <em> </em>
-                <button className="btn text-white" onClick={() => {
-                    setHome(false)
-                    setLogin(true)
-                }}>
+                <button
+                  className="btn text-white"
+                  onClick={() => {
+                    setHome(false);
+                    setLogin(true);
+                  }}
+                >
                   Login
                 </button>
-               
               </Col>
             </Row>
-            :
-            login ?
+          ) : login ? (
             <Login setLogin={setLogin} loginHandler={loginHandler} />
-            :
+          ) : (
             <Register setLogin={setLogin} loginHandler={loginHandler} />
-          }
-
-          
+          )}
         </Container>
       </div>
     </>
   );
 }
 
-export default Home
+export default Home;

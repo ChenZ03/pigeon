@@ -1,20 +1,16 @@
 // import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Workspace.module.css';
-import NaviBar from '../components/partials/Navibar';
+import MainNav from '../components/partials/MainNav';
 import {Container, Row, Col, Button, Card} from 'react-bootstrap';
 import CenteredModal from '../components/modals/workspace';
 import img from '../components/images/workspace.png';
 import {useState, useEffect} from 'react';
 import Router from 'next/router';
 import Workspace from '../components/Workspace';
-import {
-  gql,
-  useQuery,
-} from '@apollo/client'
+import {gql, useQuery} from '@apollo/client';
 
 export default function Home() {
-  
   const [modalShow, setModalShow] = useState(false);
   const [workspace, setWorkspace] = useState([]);
   if (typeof window !== 'undefined' && !localStorage.hasOwnProperty('userData')) {
@@ -50,7 +46,7 @@ export default function Home() {
 
   return (
     <>
-      <NaviBar />
+      <MainNav />
       {typeof window !== 'undefined' && localStorage.hasOwnProperty('userData') && (
         <>
           {workspace?.length === 0 ? (

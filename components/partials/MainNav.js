@@ -7,7 +7,7 @@ import {useState, useEffect} from 'react';
 import InvitesModal from '../modals/invites';
 import {gql, useQuery} from '@apollo/client';
 
-function NaviBar({setLogin, setHome, invitation}) {
+function MainNav({setLogin, setHome, invitation}) {
   const [modalShow, setModalShow] = useState(false);
   const [inv, setInv] = useState([]);
 
@@ -109,4 +109,4 @@ function NaviBar({setLogin, setHome, invitation}) {
   );
 }
 
-export default NaviBar;
+export default MainNav;

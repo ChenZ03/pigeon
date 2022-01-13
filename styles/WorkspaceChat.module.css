@@ -2,7 +2,7 @@
     flex-direction: column;
     width: 325px;
     background-color: #9ec4e6;
-    height: 100vh;
+    height: 95vh;
     color: white;
     padding-left: 30px;
 }
@@ -19,7 +19,7 @@
 
 .relative {
     position: relative;
-    height: 100vh;
+    height: 95vh;
 }
 
 .msgContainer {
