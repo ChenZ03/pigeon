@@ -1,5 +1,6 @@
 import {useRouter} from 'next/router';
-import MainNav from '../../components/partials/MainNav';
+// import MainNav from '../../components/partials/MainNav';
+import WorkspaceNav from '../../components/partials/WorkspaceNav';
 import {Nav, Navbar, Container, Row, Col, Form, Button} from 'react-bootstrap';
 import styles from '../../styles/WorkspaceChat.module.css';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
@@ -12,7 +13,7 @@ function WorkspaceChat() {
 
   return (
     <>
-      <MainNav />
+      <WorkspaceNav />
       <Row>
         <Col lg="2">
           <Nav defaultActiveKey="/workspace" className={styles.sideNav}>
