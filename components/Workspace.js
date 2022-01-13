@@ -13,7 +13,7 @@ function Workspace() {
                 <div className={`d-flex ${styles.relative}`}>
                   <div className={styles.circle}>LI</div>
                   <div className={styles.workspaceName}>Lorem Ipsum</div>
-                  <div className={`btn ${styles.launchButton}`}>Launch Workspace</div>
+                  <a href={`/1`} className={`btn ${styles.launchButton} ${styles.link}`}>Launch Workspace</a>
                 </div>
               </Card.Body>
             </Card>

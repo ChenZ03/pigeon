@@ -11,3 +11,17 @@
     font-size: 20px;
     font-weight: bold;
 }
+
+.invButton {
+    background-color: transparent;
+    border: none;
+}
+
+.invButton:hover {
+    background-color: transparent;
+}
+
+.invButton:focus {
+    background-color: transparent;
+    box-shadow: none;
+}

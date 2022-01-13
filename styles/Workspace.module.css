@@ -156,3 +156,8 @@
     background-color: lightgray;
     box-shadow: none;
 }
+
+.link {
+    color: white;
+    text-decoration: none;
+}

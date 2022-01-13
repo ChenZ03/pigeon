@@ -17,7 +17,7 @@ export default function Home() {
   return (
     <>
       <NaviBar />
-      {typeof window !== 'undefined' && localStorage.hasOwnProperty('userData') && (
+      {/* {typeof window !== 'undefined' && localStorage.hasOwnProperty('userData') && (
         <>
           <div className={styles.container}>
             <Container>
@@ -45,7 +45,7 @@ export default function Home() {
             </Container>
           </div>
         </>
-      )}
+      )} */}
       <>
         <div className={styles.container}>
           <Container>

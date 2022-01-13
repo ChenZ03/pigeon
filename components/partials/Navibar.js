@@ -1,4 +1,4 @@
-import {Navbar, Container, Nav, Badge} from 'react-bootstrap';
+import {Navbar, Container, Nav, Badge, Button} from 'react-bootstrap';
 import logo from '../images/logo.png';
 import Image from 'next/image';
 import styles from '../../styles/Navbar.module.css';
@@ -18,57 +18,71 @@ function NaviBar({setLogin, setHome}) {
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="me-auto">
+          {/* <Nav className="me-auto">
             <Nav.Link onClick={() => setHome(true)} className={styles.navbrand}>
               pigeon
             </Nav.Link>
-          </Nav>
+          </Nav> */}
           {typeof window !== 'undefined' && localStorage.hasOwnProperty('userData') ? (
-            <Nav>
-              <Nav.Link
-                href="/workspace"
-                className={styles.navtext}
-                onClick={() => {
-                  setModalShow(true);
-                }}
-              >
-                Invites <Badge bg="secondary">0</Badge>
-              </Nav.Link>
+            <>
+              <Nav className="me-auto">
+                <Nav.Link onClick={() => Router.push('/workspace')} className={styles.navbrand}>
+                  pigeon
+                </Nav.Link>
+              </Nav>
+              <Nav>
+                <Button
+                  className={styles.invButton}
+                  onClick={() => {
+                    setModalShow(true);
+                  }}
+                >
+                  Invites <Badge bg="secondary">0</Badge>
+                </Button>
 
-              <InvitesModal show={modalShow} onHide={() => setModalShow(false)} />
+                {/* map de shi zgege ba */}
+                <InvitesModal show={modalShow} onHide={() => setModalShow(false)} />
 
-              <Nav.Link
-                className={styles.navtext}
-                onClick={() => {
-                  localStorage.removeItem('userData');
-                  localStorage.removeItem('token');
-                  Router.push('/');
-                }}
-              >
-                Logout
-              </Nav.Link>
-            </Nav>
+                <Nav.Link
+                  className={styles.navtext}
+                  onClick={() => {
+                    localStorage.removeItem('userData');
+                    localStorage.removeItem('token');
+                    Router.push('/');
+                  }}
+                >
+                  Logout
+                </Nav.Link>
+              </Nav>
+            </>
           ) : (
-            <Nav>
-              <Nav.Link
-                className={styles.navtext}
-                onClick={() => {
-                  setLogin(false);
-                  setHome(false);
-                }}
-              >
-                Register
-              </Nav.Link>
-              <Nav.Link
-                className={styles.navtext}
-                onClick={() => {
-                  setLogin(true);
-                  setHome(false);
-                }}
-              >
-                Login
-              </Nav.Link>
-            </Nav>
+            <>
+              <Nav className="me-auto">
+                <Nav.Link onClick={() => setHome(true)} className={styles.navbrand}>
+                  pigeon
+                </Nav.Link>
+              </Nav>
+              <Nav>
+                <Nav.Link
+                  className={styles.navtext}
+                  onClick={() => {
+                    setLogin(false);
+                    setHome(false);
+                  }}
+                >
+                  Register
+                </Nav.Link>
+                <Nav.Link
+                  className={styles.navtext}
+                  onClick={() => {
+                    setLogin(true);
+                    setHome(false);
+                  }}
+                >
+                  Login
+                </Nav.Link>
+              </Nav>
+            </>
           )}
         </Navbar.Collapse>
       </Container>
