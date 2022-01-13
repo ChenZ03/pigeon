@@ -37,7 +37,8 @@ function NaviBar({setLogin, setHome}) {
                     setModalShow(true);
                   }}
                 >
-                  Invites <Badge bg="secondary">0</Badge>
+                  Invites (0)
+                  {/* <Badge bg="secondary">0</Badge> */}
                 </Button>
 
                 {/* map de shi zgege ba */}
