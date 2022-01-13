@@ -1,7 +1,7 @@
 import styles from '../styles/Workspace.module.css';
 import {Row, Col, Button} from 'react-bootstrap';
 
-function Invites() {
+function Invites({data}) {
   return (
     <Row className="mt-2 p-3">
       <Col>

@@ -8,9 +8,17 @@ import img from '../components/images/workspace.png';
 import {useState, useEffect} from 'react';
 import Router from 'next/router';
 import Workspace from '../components/Workspace';
+<<<<<<< HEAD
 import {gql, useQuery, useMutation} from '@apollo/client';
+=======
+import {
+  gql,
+  useQuery,
+} from '@apollo/client'
+>>>>>>> 245538aa7891f5f4c7aad5ef9f8d33c20149cb45
 
 export default function Home() {
+  
   const [modalShow, setModalShow] = useState(false);
   const [workspace, setWorkspace] = useState([]);
   if (typeof window !== 'undefined' && !localStorage.hasOwnProperty('userData')) {
@@ -46,10 +54,18 @@ export default function Home() {
 
   return (
     <>
+<<<<<<< HEAD
       <NaviBar />
       {typeof window !== 'undefined' && localStorage.hasOwnProperty('userData') && (
         <>
           {workspace?.length === 0 ? (
+=======
+      {typeof window !== 'undefined' && localStorage.hasOwnProperty('userData') && !loading && (
+        <>
+          <NaviBar invitation={() => refetch()} />
+          {
+            workspace.length < 1 ?
+>>>>>>> 245538aa7891f5f4c7aad5ef9f8d33c20149cb45
             <div className={styles.container}>
               <Container>
                 <Row>
