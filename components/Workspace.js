@@ -2,7 +2,6 @@ import {Card, Container, Row, Col} from 'react-bootstrap';
 import styles from '../styles/Workspace.module.css';
 
 function Workspace({data}) {
-
   let {id, name} = data;
   let shortName = '';
 
