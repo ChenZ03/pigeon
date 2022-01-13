@@ -5,35 +5,32 @@ import styles from '../../styles/Navbar.module.css';
 import Router from 'next/router';
 import {useState, useEffect} from 'react';
 import InvitesModal from '../modals/invites';
-import {
-  gql,
-  useQuery,
-} from '@apollo/client'
+import {gql, useQuery} from '@apollo/client';
 
-function NaviBar({setLogin, setHome, invitation}) {
+function MainNav({setLogin, setHome, invitation}) {
   const [modalShow, setModalShow] = useState(false);
-  const [inv, setInv] = useState([])
+  const [inv, setInv] = useState([]);
 
   const GET_INVITATION = gql`
-    query getPending($id : String!){
-      getPending(id : $id){
+    query getPending($id: String!) {
+      getPending(id: $id) {
         id
         name
       }
     }
-  `
+  `;
 
-  if(typeof window !== 'undefined' && localStorage.hasOwnProperty('userData')){
+  if (typeof window !== 'undefined' && localStorage.hasOwnProperty('userData')) {
     var {loading, error, data, refetch} = useQuery(GET_INVITATION, {
-      variables : {
-        id : JSON.parse(localStorage.getItem('userData')).user.id
-      }
-    })
+      variables: {
+        id: JSON.parse(localStorage.getItem('userData')).user.id,
+      },
+    });
   }
 
   useEffect(() => {
-    if(data) {
-      setInv(data.getPending)
+    if (data) {
+      setInv(data.getPending);
     }
   }, [data])
 
@@ -68,7 +65,7 @@ function NaviBar({setLogin, setHome, invitation}) {
                     setModalShow(true);
                   }}
                 >
-                  Invites <Badge bg="secondary">{inv.length}</Badge>
+                  Invites ({`${inv.length}`}){/* <Badge bg="secondary"> */}
                 </Button>
 
                 <InvitesModal show={modalShow} onHide={() => setModalShow(false)} data={inv} acceptinv={acceptInvHandler} declineinv={declineInvHandler} />
@@ -120,4 +117,4 @@ function NaviBar({setLogin, setHome, invitation}) {
   );
 }
 
-export default NaviBar;
+export default MainNav;
