@@ -3,12 +3,41 @@ import logo from '../images/logo.png';
 import Image from 'next/image';
 import styles from '../../styles/Navbar.module.css';
 import Router from 'next/router';
-import {resolveReadonlyArrayThunk} from 'graphql';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import InvitesModal from '../modals/invites';
+import {
+  gql,
+  useQuery,
+} from '@apollo/client'
 
-function NaviBar({setLogin, setHome}) {
+function NaviBar({setLogin, setHome, invitation}) {
   const [modalShow, setModalShow] = useState(false);
+  const [inv, setInv] = useState([])
+
+  const GET_INVITATION = gql`
+    query getPending($id : String!){
+      getPending(id : $id){
+        id
+        name
+      }
+    }
+  `
+
+  if(typeof window !== 'undefined' && localStorage.hasOwnProperty('userData')){
+    var {loading, error, data, refetch} = useQuery(GET_INVITATION, {
+      variables : {
+        id : JSON.parse(localStorage.getItem('userData')).user.id
+      }
+    })
+  }
+
+  useEffect(() => {
+    if(data) {
+      setInv(data.getPending)
+    }
+  }, [data])
+
+
 
   return (
     <Navbar collapseOnSelect expand="lg" className={styles.navbarBackground} variant="dark">
@@ -32,10 +61,10 @@ function NaviBar({setLogin, setHome}) {
                   setModalShow(true);
                 }}
               >
-                Invites <Badge bg="secondary">0</Badge>
+                Invites <Badge bg="secondary">{inv.length}</Badge>
               </Nav.Link>
 
-              <InvitesModal show={modalShow} onHide={() => setModalShow(false)} />
+              <InvitesModal show={modalShow} onHide={() => setModalShow(false)} data={inv} />
 
               <Nav.Link
                 className={styles.navtext}

@@ -11,10 +11,10 @@ import Workspace from '../components/Workspace';
 import {
   gql,
   useQuery,
-  useMutation
 } from '@apollo/client'
 
 export default function Home() {
+  
   const [modalShow, setModalShow] = useState(false);
   const [workspace, setWorkspace] = useState([])
   if (typeof window !== 'undefined' && !localStorage.hasOwnProperty('userData')) {
@@ -48,9 +48,10 @@ export default function Home() {
 
   return (
     <>
-      <NaviBar />
-      {typeof window !== 'undefined' && localStorage.hasOwnProperty('userData') && (
+      
+      {typeof window !== 'undefined' && localStorage.hasOwnProperty('userData') && !loading && (
         <>
+          <NaviBar invitation={() => refetch()} />
           {
             workspace.length < 1 ?
             <div className={styles.container}>
