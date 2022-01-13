@@ -46,7 +46,7 @@ export default function Home() {
 
   return (
     <>
-      <MainNav />
+      <MainNav invitation={() => refetch()} />
       {typeof window !== 'undefined' && localStorage.hasOwnProperty('userData') && (
         <>
           {workspace?.length === 0 ? (
