@@ -35,14 +35,11 @@ export default function Home() {
 
   useEffect(() => {
     if (data) {
-      console.log(data);
       setWorkspace(data.getWorkSpace);
     }
   }, [data]);
 
   var showWorkspace = workspace?.map((space) => <Workspace key={space.id} data={space} />);
-
-  console.log(workspace);
 
   return (
     <>
