@@ -42,6 +42,7 @@ function CenteredModal(props) {
     if (data) {
       alert('Workspace created successfully');
       props.onHide();
+      props.fetch()
     }
   }, [error, data]);
 

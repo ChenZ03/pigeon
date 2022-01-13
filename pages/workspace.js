@@ -5,21 +5,55 @@ import NaviBar from '../components/partials/Navibar';
 import {Container, Row, Col, Button, Card} from 'react-bootstrap';
 import CenteredModal from '../components/modals/workspace';
 import img from '../components/images/workspace.png';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import Router from 'next/router';
 import Workspace from '../components/Workspace';
+import {
+  gql,
+  useQuery,
+  useMutation
+} from '@apollo/client'
 
 export default function Home() {
   const [modalShow, setModalShow] = useState(false);
+  const [workspace, setWorkspace] = useState([])
   if (typeof window !== 'undefined' && !localStorage.hasOwnProperty('userData')) {
     Router.push('/');
   }
+
+  const GET_WORKSPACE = gql`
+    query getWorkSpace($id : String!){
+      getWorkSpace(id : $id) {
+        id
+        name
+      }
+    }
+  `
+  if(typeof window !== 'undefined'){
+    var {loading, error, data, refetch} = useQuery(GET_WORKSPACE, {
+      variables : {
+        id : JSON.parse(localStorage.getItem('userData')).user.id
+      }
+    })
+  }
+
+    
+  useEffect(() => {
+    if(data) {
+      setWorkspace(data.getWorkSpace)
+    }
+  }, [data])
+
+  var showWorkspace = workspace.map(space => <Workspace key={space.id} data={space} />)
+
   return (
     <>
       <NaviBar />
       {/* {typeof window !== 'undefined' && localStorage.hasOwnProperty('userData') && (
         <>
-          <div className={styles.container}>
+          {
+            workspace.length < 1 ?
+            <div className={styles.container}>
             <Container>
               <Row>
                 <Col lg="6" className={styles.img}>
@@ -39,49 +73,41 @@ export default function Home() {
                     Create A Workspace
                   </Button>
 
-                  <CenteredModal show={modalShow} onHide={() => setModalShow(false)} />
+                  <CenteredModal show={modalShow} onHide={() => setModalShow(false)} fetch={() => refetch()} />
                 </Col>
               </Row>
             </Container>
           </div>
-        </>
-      )} */}
-      <>
-        <div className={styles.container}>
-          <Container>
-            <Row>
-              <Col>
-                <div className="mt-5 text-white ">
-                  <h2>My Workspaces</h2>
-                </div>
-              </Col>
-            </Row>
-            {/* MAP THIS SHIT */}
-            {/* <Row>
-              <Col>
-                <Card className={styles.workspaceCard}>
-                  <Card.Body>
-                    <div className={`d-flex ${styles.relative}`}>
-                      <div className={styles.circle}>LI</div>
-                      <div className={styles.workspaceName}>Lorem Ipsum</div>
-                      <div className={`btn ${styles.launchButton}`}>Launch Workspace</div>
-                    </div>
-                  </Card.Body>
-                </Card>
-              </Col>
-            </Row> */}
-            <Workspace />
+          :
+          <div className={styles.container}>
             <Container>
               <Row>
                 <Col>
-                  <Button className={styles.addWorkspace} onClick={() => setModalShow(true)}>
-                    <div className={styles.workspaceName}>Add New Workspace</div>
-                  </Button>
+                  <div className="mt-5 text-white ">
+                    <h2>My Workspaces</h2>
+                  </div>
                 </Col>
               </Row>
+              {showWorkspace}
+              <Container>
+                <Row>
+                  <Col>
+                    <Button className={styles.addWorkspace} onClick={() => setModalShow(true)}>
+                      <div className={styles.workspaceName}>Add New Workspace</div>
+                    </Button>
+
+                    <CenteredModal show={modalShow} onHide={() => setModalShow(false)} fetch={() => refetch()}  />
+                  </Col>
+                </Row>
+              </Container>
             </Container>
-          </Container>
-        </div>
+          </div>
+          }
+          
+        </>
+      )}
+      <>
+        
       </>
     </>
   );
