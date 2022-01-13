@@ -48,7 +48,6 @@ export default function Home() {
 
   return (
     <>
-      
       {typeof window !== 'undefined' && localStorage.hasOwnProperty('userData') && !loading && (
         <>
           <NaviBar invitation={() => refetch()} />
