@@ -19,7 +19,7 @@ function WorkspaceChat() {
             <Navbar.Brand className={styles.navBrand} href="/workspace">
               Active
             </Navbar.Brand>
-            <Nav.Link className={styles.navLink} href="/workspace/taskboard/1">
+            <Nav.Link className={styles.navLink} href={`/workspace/taskboard/taskboard`}>
               Task Board
             </Nav.Link>
 

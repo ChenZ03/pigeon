@@ -1,4 +1,62 @@
 .container {
-    background-color: #9ec4e6;
-    min-height: 100vh;
-  }
+  background-color: #9ec4e6;
+  min-height: 95vh;
+}
+
+.outerCard {
+  border-radius: 20px;
+  background-color: whitesmoke;
+}
+
+.taskCard {
+  border-radius: 10px;
+}
+
+.cardFooter {
+  background-color: white;
+  margin: 2px;
+}
+
+.circle {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  background: #9ec4e6;
+  color: white;
+  text-align: center;
+  justify-content: end;
+  margin-left: auto;
+  margin-bottom: 0;
+}
+
+.goBack {
+  text-decoration: none;
+  color: white;
+}
+
+.goBack:hover {
+  color: white;
+}
+
+.addButton {
+  height: 110px;
+  width: 330px;
+  background-color: white;
+  border: 1px solid lightgray;
+  color: #9ec4e6;
+  outline: 3px dashed #9ec4e6;
+  outline-offset: -10px;
+}
+
+.addButton:hover {
+  background-color: white;
+  color: #9ec4e6;
+  border: 1px solid lightgray;
+}
+
+.addButton:focus {
+  background-color: white;
+  color: #9ec4e6;
+  border: 1px solid lightgray;
+}
