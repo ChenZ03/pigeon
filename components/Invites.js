@@ -1,19 +1,98 @@
 import styles from '../styles/Workspace.module.css';
 import {Row, Col, Button} from 'react-bootstrap';
+import {gql, useMutation, useQuery} from '@apollo/client';
+import { useEffect } from 'react';
 
-function Invites({data}) {
+function Invites({data,  declineinv, acceptinv}) {
+  let {id, name} = data
+  let shortName = ''
+
+  if(name.split(' ').length > 1) {
+    let name1 = name.split(' ').shift()[0].toUpperCase()
+    let name2 = name.split(' ').pop()[0].toUpperCase()
+    shortName = name1 + name2
+  }else{
+    shortName = name[0].toUpperCase()
+  }
+
+  const ACCEPT = gql`
+    mutation AddUserIntoWorkspace($userId: String, $workspaceId: String, ) {
+      addUserIntoWorkspace( workspace : {user_id: $userId, workspace_id: $workspaceId}) {
+        users
+      }
+    }
+  `
+
+  const DECLINE = gql`
+    mutation DeclineWorkspaceInv($userId: String, $workspaceId: String) {
+      declineWorkspaceInv(workspace : {user_id: $userId, workspace_id: $workspaceId}) {
+        workspace
+      }
+    } 
+  `
+
+  const [accept, acceptData] = useMutation(ACCEPT, {
+    onError: () => acceptData.error
+  })
+
+  const [decline, declineData] = useMutation(DECLINE, {
+    onError: () => declineData.error
+  })
+
+  const acceptHandler = () => {
+    accept({
+      variables : {
+        userId : JSON.parse(localStorage.getItem('userData')).user.id,
+        workspaceId : id
+      }
+    })
+  }
+
+  const declineHandler = () => {
+    decline({
+      variables : {
+        userId : JSON.parse(localStorage.getItem('userData')).user.id,
+        workspaceId : id
+      }
+    })
+  }
+
+  useEffect(() => {
+    if(acceptData.data){
+      alert("Workspace invitation accepeted")
+      acceptinv()
+    }
+
+    if(acceptData.error){
+      alert(acceptData.error)
+      console.log(JSON.stringify(acceptData.error, null, 2));
+    }
+  }, [acceptData.data, acceptData.error])
+
+  useEffect(() => {
+    if(declineData.data){
+      alert("Workspace invitation declined")
+      declineinv()
+    }
+
+    if(declineData.error){
+      alert(declineData.error)
+      console.log(JSON.stringify(declineData.error, null, 2));
+    }
+  }, [declineData.data, declineData.error])
+
   return (
     <Row className="mt-2 p-3">
       <Col>
         <div className={`d-flex ${styles.relative}`}>
-          <div className={styles.circle}>LI</div>
-          <div className={styles.workspaceName}>Lorem Ipsum</div>
+          <div className={styles.circle}>{shortName}</div>
+          <div className={styles.workspaceName}>{name}</div>
           <div className={styles.endButtons}>
-            <Button type="submit" className={styles.accept}>
+            <Button type="submit" className={styles.accept} onClick={acceptHandler}>
               ✔
             </Button>
             <em> </em>
-            <Button type="submit" className={styles.decline}>
+            <Button type="submit" className={styles.decline} onClick={declineHandler}>
               ✖
             </Button>
           </div>

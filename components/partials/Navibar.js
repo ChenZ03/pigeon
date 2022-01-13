@@ -37,7 +37,14 @@ function NaviBar({setLogin, setHome, invitation}) {
     }
   }, [data])
 
+  const acceptInvHandler = () => {
+    refetch()
+    invitation()
+  }
 
+  const declineInvHandler = () => {
+    refetch()
+  }
 
   return (
     <Navbar collapseOnSelect expand="lg" className={styles.navbarBackground} variant="dark">
@@ -64,8 +71,7 @@ function NaviBar({setLogin, setHome, invitation}) {
                   Invites <Badge bg="secondary">{inv.length}</Badge>
                 </Button>
 
-                {/* map de shi zgege ba */}
-                <InvitesModal show={modalShow} onHide={() => setModalShow(false)} data={inv} />
+                <InvitesModal show={modalShow} onHide={() => setModalShow(false)} data={inv} acceptinv={acceptInvHandler} declineinv={declineInvHandler} />
 
                 <Nav.Link
                   className={styles.navtext}
