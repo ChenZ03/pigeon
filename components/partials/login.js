@@ -18,8 +18,8 @@ function Login({setLogin, loginHandler}) {
   `
 
   const GOOGLELOGIN = gql`
-    mutation GoogleLogin($email : String!) {
-      googleLogin (user : {email : $email}) {
+    mutation GoogleLogin($email : String!, $username: String!) {
+      googleLogin (user : {email : $email, username : $username}) {
         token
       }
     }

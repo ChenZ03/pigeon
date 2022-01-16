@@ -5,7 +5,7 @@ import styles from '../../styles/Navbar.module.css';
 import Router from 'next/router';
 import {useState, useEffect} from 'react';
 import InvitesModal from '../modals/invites';
-import {gql, useQuery, useSubscriptions} from '@apollo/client';
+import {gql, useQuery, useSubscription} from '@apollo/client';
 
 function MainNav({setLogin, setHome, invitation}) {
   const [modalShow, setModalShow] = useState(false);
@@ -20,12 +20,26 @@ function MainNav({setLogin, setHome, invitation}) {
     }
   `;
 
+  const INVITED = gql`
+    subscription userInvited($user_id : String!){
+      user_invited(user_id: $user_id){
+        pending
+      }
+    }
+  `
+
   if (typeof window !== 'undefined' && localStorage.hasOwnProperty('userData')) {
     var {loading, error, data, refetch} = useQuery(GET_INVITATION, {
       variables: {
         id: JSON.parse(localStorage.getItem('userData')).user.id,
       },
     });
+
+    var invitedData = useSubscription(INVITED,{
+      variables: {
+        id: JSON.parse(localStorage.getItem('userData')).user.id,
+      }
+    })
   }
 
   useEffect(() => {
@@ -42,6 +56,18 @@ function MainNav({setLogin, setHome, invitation}) {
   const declineInvHandler = () => {
     refetch()
   }
+
+  useEffect(() => {
+    if(invitedData.loading){
+      console.log(invitedData.loading)
+    }
+    if(invitedData.error){
+      console.log(invitedData.error)
+    }
+    if(invitedData.data){
+      console.log(invitedData.data)
+    }
+  }, [invitedData])
 
   return (
     <Navbar collapseOnSelect expand="lg" className={styles.navbarBackground} variant="dark">
