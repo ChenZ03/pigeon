@@ -5,7 +5,7 @@ import styles from '../../styles/Navbar.module.css';
 import Router from 'next/router';
 import {useState, useEffect} from 'react';
 import InvitesModal from '../modals/invites';
-import {gql, useQuery} from '@apollo/client';
+import {gql, useQuery, useSubscriptions} from '@apollo/client';
 
 function MainNav({setLogin, setHome, invitation}) {
   const [modalShow, setModalShow] = useState(false);

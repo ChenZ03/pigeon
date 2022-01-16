@@ -22,6 +22,10 @@ function Home() {
     Router.push('/workspace');
   };
 
+  if(typeof window !== 'undefined' && localStorage.hasOwnProperty('userData')){
+    Router.push('/workspace');
+  }
+
   return (
     <>
       <MainNav setLogin={setLogin} setHome={setHome} />
