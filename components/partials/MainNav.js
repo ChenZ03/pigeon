@@ -22,7 +22,7 @@ function MainNav({setLogin, setHome, invitation}) {
 
   const INVITED = gql`
     subscription userInvited($user_id : String!){
-      user_invited(user_id: $user_id){
+      userInvited(user_id: $user_id){
         pending
       }
     }
@@ -37,7 +37,7 @@ function MainNav({setLogin, setHome, invitation}) {
 
     var invitedData = useSubscription(INVITED,{
       variables: {
-        id: JSON.parse(localStorage.getItem('userData')).user.id,
+        user_id: JSON.parse(localStorage.getItem('userData')).user.id,
       }
     })
   }
@@ -58,14 +58,8 @@ function MainNav({setLogin, setHome, invitation}) {
   }
 
   useEffect(() => {
-    if(invitedData.loading){
-      console.log(invitedData.loading)
-    }
-    if(invitedData.error){
-      console.log(invitedData.error)
-    }
-    if(invitedData.data){
-      console.log(invitedData.data)
+    if(invitedData.data && !invitedData.loading){
+      refetch()
     }
   }, [invitedData])
 
