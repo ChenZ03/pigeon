@@ -15,8 +15,7 @@ function Workspace({data}) {
   }
 
   const onClickHandler = (e) => {
-    Router.push('/workspace/id');
-    console.log(id);
+    Router.push(`/workspace/${id}`);
   };
 
   return (
