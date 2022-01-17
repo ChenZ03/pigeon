@@ -105,3 +105,12 @@
     right : 40px;
     cursor: pointer;
 }
+
+.navLink2 {
+    color: white !important;
+    font-size: 18px;
+    padding-left : 65px;
+    padding-top : 30px;
+    display : flex;
+    width: 80%;
+}
