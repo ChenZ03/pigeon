@@ -5,8 +5,10 @@ import {useState, useEffect} from 'react';
 
 function UserModal(props) {
     const [userList, setUserList] = useState([])
+    const [search, setSearch] = useState("")
+
     const GET_SPACE_USERS = gql`
-        query GetAllUsers($user_id: String) {
+        query GetAllSpaceUsers($user_id: String) {
             getAllSpaceUsers(id: $user_id) {
             id
             username
@@ -15,21 +17,52 @@ function UserModal(props) {
     `
 
     const GET_ALL_USERS = gql`
-        query GetAllUsers {
-            getAllUsers {
+        query GetAllUsers($name: String) {
+            getAllUsers(name : $name) {
             id
             username
+            }
+        }
+    `
+
+    const INVITE_USER = gql`
+        mutation InviteUserToWorkspace($userId: String, $workspaceId: String) {
+            inviteUserToWorkspace (workspace : {user_id: $userId, workspace_id: $workspaceId})  {
+                id
+                pending
+            }
+        }
+    `
+
+    const REMOVE_USER = gql`
+        mutation RemoveUserFromWorkspace($userId : String, $workspaceId : String) {
+            removeUserFromWorkspace(workspace : {user_id : $userId, workspace_id : $workspaceId}) {
+            workspace
             }
         }
     `
     
     const spaceUser = useQuery(GET_SPACE_USERS, {
         variables: {
-            user_id : props.id
+            //this is workspace_id not user
+            user_id : props.id,
         }
     })
 
-    const AllUser = useQuery(GET_ALL_USERS)
+
+    const AllUser = useQuery(GET_ALL_USERS, {
+        variables : {
+            name : search
+        }
+    })
+
+    const [invite, inviteData] = useMutation(INVITE_USER, {
+        onError : () => inviteData.error
+    })
+
+    const [remove, removeData] = useMutation(REMOVE_USER, {
+        onError : () => removeData.error
+    })
 
     useEffect(() => {
         if(spaceUser.data && props.type == "users"){
@@ -43,17 +76,116 @@ function UserModal(props) {
         }
     }, [AllUser])
 
+    const removeUser = id => event => {
+        event.preventDefault()
+        remove({
+            variables : {
+                userId : id,
+                workspaceId : props.id
+            }
+        })
+    }
+
+    const inviteUser = id => event => {
+        event.preventDefault()
+        invite({
+            variables: {
+                workspaceId : props.id,
+                userId : id
+            }
+        })
+    }
+
+    useEffect(() => {
+        if(inviteData.data){
+            window.alert("User Invited successfully")
+            
+        }
+
+        if(inviteData.error){
+            window.alert("Pending Invitation / User exist in workspace")
+            
+        }
+    }, [inviteData.data, inviteData.error])
+
+    useEffect(() => {
+        if(removeData.data){
+            window.alert("User removed")
+            spaceUser.refetch()
+        }
+
+        if(removeData.error){
+            window.alert("Error")
+            
+        }
+    }, [removeData.data, removeData.error])
+
+    const onChangeHandler = (e) => {
+        setSearch(e.target.value)
+        AllUser.refetch()
+    }
+    
     console.log(userList)
 
 
     return (
-        <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+        <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered >
         <Modal.Header closeButton>
             <Modal.Title id="contained-modal-title-vcenter">{props.type == "invite" ? "Invite User to Workspace!" : "User list"}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className={styles.modelSize}>
             <Container>
-                
+                {
+                    <>
+                        {
+                            props.type == 'invite' &&
+                            <div className={styles.search}>
+                                <input type="text" placeholder="Search Username" onChange={onChangeHandler}/>
+                            </div>
+                        }
+                        {
+                            userList ?
+                            userList.map(user => {
+                                let shortName = ''
+
+                                if(user.username.split(' ').length > 1) {
+                                    let name1 = user.username.split(' ').shift()[0].toUpperCase()
+                                    let name2 = user.username.split(' ').pop()[0].toUpperCase()
+                                    shortName = name1 + name2
+                                  }else{
+                                    shortName = user.username[0].toUpperCase()
+                                  }
+                                  
+                                return (
+                                    <Col key={user.id}>
+                                        <div className={`d-flex ${styles.relative2}`}>
+                                        <div className={styles.circle}>{shortName}</div>
+                                        <div className={styles.workspaceName}>{user.username}</div>
+                                        {
+                                            props.type == 'invite' ? 
+                                            <div className={styles.buttonAction}>
+                                                <button className={styles.accept} onClick={inviteUser(user.id)}>INVITE</button>
+                                            </div>
+                                            :
+                                            
+                                            JSON.parse(localStorage.getItem('userData')).user.id !== user.id &&
+                                            <div className={styles.buttonAction}>
+                                                <button className={styles.accept} onClick={removeUser(user.id)}>REMOVE</button>
+                                            </div>
+                                            
+                                        }
+                                        </div>
+                                    </Col>
+                                )
+                            })
+                            :
+                            <h1>
+                                No user found !
+                            </h1>
+                        }
+                        
+                    </>
+                }
             </Container>
         </Modal.Body>  
         </Modal>

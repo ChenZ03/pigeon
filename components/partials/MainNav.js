@@ -58,7 +58,7 @@ function MainNav({setLogin, setHome, invitation}) {
   }
 
   useEffect(() => {
-    if(invitedData.data && !invitedData.loading){
+    if(typeof window !== 'undefined' && localStorage.hasOwnProperty('userData') && invitedData.data && !invitedData.loading){
       refetch()
     }
   }, [invitedData])

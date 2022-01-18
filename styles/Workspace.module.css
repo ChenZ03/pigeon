@@ -76,6 +76,7 @@
     padding: 20px;
     margin-left: 15px;
     font-size: 25px;
+    width: 40%;
 }
 
 .launchButton {
@@ -92,8 +93,14 @@
     background-color: lavender;
 }
 
-.relative {
+.relative, .relative2 {
     position: relative;
+   
+}
+
+.relative2{
+    margin : 20px;
+    margin-bottom : 40px;
 }
 
 .workspaceCard {
@@ -163,4 +170,21 @@
 .link {
     color: white;
     text-decoration: none;
+}
+
+.buttonAction{
+    display : flex;
+    justify-content: flex-end;
+    align-items: center;
+    width : 50%;
+}
+
+.search{
+   display : flex;
+   justify-content: center;
+}
+
+.modelSize{
+    max-height: 80vh;
+    overflow-y : auto;
 }
