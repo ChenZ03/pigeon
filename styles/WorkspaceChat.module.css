@@ -106,11 +106,54 @@
     cursor: pointer;
 }
 
-.navLink2 {
+.navLink2, .navLink3 {
     color: white !important;
     font-size: 18px;
     padding-left : 65px;
     padding-top : 30px;
     display : flex;
     width: 80%;
+}
+
+.navLink3{
+    width: 100% !important;
+}
+
+.channelLink{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.addChannel {
+    border: 2px solid whitesmoke;
+    border-radius : 10px;
+    padding: 10px;
+    font-size : 15px;
+    cursor: pointer;
+}
+
+.accept {
+    margin-left: 20px;
+    background-color: #9ec4e6;
+    color: white;
+    border: none;
+}
+.accept:focus {
+    background-color: #9ec4e6;
+    box-shadow: none;
+}
+
+.channelInput{
+    width: 70%;
+    background-color: #9ec4e6;
+    border : none;
+    border-bottom: 2px solid whitesmoke;
+    color: whitesmoke;
+}
+
+.channelInput:focus{
+    outline: none;
 }

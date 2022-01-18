@@ -6,6 +6,8 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import {useState, useEffect} from 'react';
 import {gql, useQuery, useMutation, useSubscription} from '@apollo/client';
 import Router from 'next/router';
+import AddChannel from '../../components/partials/addChannel'
+
 
 function WorkspaceChat() {
   const router = useRouter();
@@ -14,6 +16,9 @@ function WorkspaceChat() {
   const [channel, setChannel] = useState(null);
   const [workspace, setWorkspace] = useState(null)
   const [channelList, setChannelList] = useState(null)
+  const [chats, setChats] = useState(null)
+  const [addingChannel, setAddChannel] = useState(false)
+
   if (typeof window !== 'undefined' && !localStorage.hasOwnProperty('userData')) {
     Router.push('/');
   }
@@ -26,6 +31,7 @@ function WorkspaceChat() {
       }
     }
   `
+
 
   const GET_CURRENTSPACE = gql`
     query GetCurrentWorkSpace($id: String) {
@@ -60,6 +66,7 @@ function WorkspaceChat() {
     }
   })
 
+
   useEffect(() => {
     if(workspaceData.data){
       setWorkspace(workspaceData.data.getCurrentWorkSpace)
@@ -87,14 +94,21 @@ function WorkspaceChat() {
 
   const changeChannel = id => event => {
     event.preventDefault()
-    console.log(id)
-    setChannel(id[1])
+    setChannel({
+      id : id[0],
+      name : id[1]
+    })
+  }
+
+  const addChannel = () => {
+    setShowDropDown(true)
+    setAddChannel(!addingChannel)
   }
 
   if(channel && workspace && channelList){
     return (
       <div className={styles.all}>
-        <WorkspaceNav />
+        <WorkspaceNav id={id}  />
         <Row className={styles.row}>
           <div className={styles.navContainer}>
             <Nav defaultActiveKey="/workspace" className={styles.sideNav}>
@@ -109,6 +123,7 @@ function WorkspaceChat() {
               <div className={styles.navLink} href="link-2">
                 <i className={"fas fa-caret-down " + styles.icon} onClick={() => {
                     showDropDown === true ? setShowDropDown(false) : setShowDropDown(true);
+                    setAddChannel(false)
                   }}
                 ></i>
                 Channels
@@ -118,14 +133,18 @@ function WorkspaceChat() {
                   {
                     channelList.map(chn => {
                       return (
-                        <Nav.Link className={styles.navLink2} onClick={changeChannel([chn.id, chn.name])}>
+                        <Nav.Link className={styles.navLink2} onClick={changeChannel([chn.id, chn.name])} key={chn.id}>
                           {chn.name.charAt(0).toUpperCase() + chn.name.slice(1)}
                         </Nav.Link>
                       )
                     })
                   }
+                  {addingChannel && <AddChannel channelList={channelList} setAddChannel={setAddChannel} id={id} refetch={refetch} />}
                 </>
               )}
+              <div className={styles.channelLink}>
+                  <p className={styles.addChannel} onClick={addChannel}>Add Channel</p>
+              </div>
             </Nav>
           </div>
           <div className={styles.chatboxContainer}>
@@ -143,8 +162,10 @@ function WorkspaceChat() {
               </div>
             </div>
           </div>
+         
         </Row>
       </div>
+      
     );
   }else{
     return <h1>Loading...</h1>
