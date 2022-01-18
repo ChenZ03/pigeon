@@ -124,8 +124,6 @@ function UserModal(props) {
         setSearch(e.target.value)
         AllUser.refetch()
     }
-    
-    console.log(userList)
 
 
     return (
@@ -168,7 +166,7 @@ function UserModal(props) {
                                             </div>
                                             :
                                             
-                                            JSON.parse(localStorage.getItem('userData')).user.id !== user.id &&
+                                            JSON.parse(localStorage.getItem('userData')).user.id !== user.id && typeof window !== 'undefined' && JSON.parse(localStorage.getItem('userData')).user.id == props.owner &&
                                             <div className={styles.buttonAction}>
                                                 <button className={styles.accept} onClick={removeUser(user.id)}>REMOVE</button>
                                             </div>

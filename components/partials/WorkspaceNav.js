@@ -8,7 +8,7 @@ import {useState, useEffect} from 'react'
 import UserModal from '../modals/user'
 
 
-function WorkspaceNav({id}) {
+function WorkspaceNav({id, owner}) {
   const [modalShow, setModalShow] = useState(false);
   const [type, setType] = useState(null)
   return (
@@ -19,11 +19,15 @@ function WorkspaceNav({id}) {
       <Navbar.Toggle />
       <Navbar.Collapse className="justify-content-end">
         <Navbar.Text>
+         
           <div className={styles.users}>
-            <i className={"fas fa-user-plus " + styles.icon} onClick={() => {
-              setModalShow(true)
-              setType("invite")
-            }} ></i>
+            {
+              typeof window !== 'undefined' && JSON.parse(localStorage.getItem('userData')).user.id == owner &&
+              <i className={"fas fa-user-plus " + styles.icon} onClick={() => {
+                setModalShow(true)
+                setType("invite")
+              }} ></i>
+            }
             <i className={"fas fa-users " + styles.icon} onClick={() => {
               setModalShow(true)
               setType("users")
@@ -31,7 +35,7 @@ function WorkspaceNav({id}) {
           </div>
         </Navbar.Text>
       </Navbar.Collapse>
-      <UserModal show={modalShow} onHide={() => setModalShow(false)} type={type} id={id}  />
+      <UserModal show={modalShow} onHide={() => setModalShow(false)} type={type} id={id} owner={owner}  />
     </Navbar>
 
   );

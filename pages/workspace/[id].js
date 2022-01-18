@@ -108,7 +108,7 @@ function WorkspaceChat() {
   if(channel && workspace && channelList){
     return (
       <div className={styles.all}>
-        <WorkspaceNav id={id}  />
+        <WorkspaceNav id={id}  owner={workspace.owner}/>
         <Row className={styles.row}>
           <div className={styles.navContainer}>
             <Nav defaultActiveKey="/workspace" className={styles.sideNav}>
@@ -142,9 +142,13 @@ function WorkspaceChat() {
                   {addingChannel && <AddChannel channelList={channelList} setAddChannel={setAddChannel} id={id} refetch={refetch} />}
                 </>
               )}
-              <div className={styles.channelLink}>
-                  <p className={styles.addChannel} onClick={addChannel}>Add Channel</p>
-              </div>
+              {
+                typeof window !== 'undefined' && JSON.parse(localStorage.getItem('userData')).user.id == workspace.owner &&
+                <div className={styles.channelLink}>
+                    <p className={styles.addChannel} onClick={addChannel}>Add Channel</p>
+                </div>
+              }
+             
             </Nav>
           </div>
           <div className={styles.chatboxContainer}>
