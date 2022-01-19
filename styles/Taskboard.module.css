@@ -33,6 +33,7 @@
 .goBack {
   text-decoration: none;
   color: white;
+  font-size: 20px;
 }
 
 .goBack:hover {
