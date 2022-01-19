@@ -42,7 +42,7 @@ function CenteredModal(props) {
     if (data) {
       alert('Workspace created successfully');
       props.onHide();
-      props.fetch()
+      props.fetch();
     }
   }, [error, data]);
 
@@ -58,7 +58,7 @@ function CenteredModal(props) {
               <Col lg="10">
                 <Form.Group>
                   <Form.Control
-                    className={styles.formControl}
+                    className={`pt-4 ${styles.formControl}`}
                     type="text"
                     placeholder="Workspace Name"
                     name="workspace"

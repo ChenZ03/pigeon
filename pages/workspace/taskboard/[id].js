@@ -2,10 +2,14 @@ import {Button, Card, Col, Container, Row} from 'react-bootstrap';
 import MainNav from '../../../components/partials/MainNav';
 import styles from '../../../styles/Taskboard.module.css';
 import Task from '../../../components/Task';
-
+import {useRouter} from 'next/router';
 // idk hwo to slug this yet fangzhe here xian
 function Taskboard() {
   const AddNewTask = () => {};
+  const router = useRouter();
+  const {id} = router.query;
+  console.log(id);
+
   return (
     <>
       <MainNav />
@@ -15,11 +19,11 @@ function Taskboard() {
           <h4 className="text-white">Workspace 1 - Task Board</h4>
           {/* display as navbar brand */}
           <Row className="mt-3">
-            {/* Map ba */}
             <Col lg="4">
               <Card className={styles.outerCard}>
                 <Card.Body>
                   <Card.Title>To-Do</Card.Title>
+                  {/* Map ba */}
                   <Task />
                   <Container>
                     <Button className={styles.addButton} onClick={() => AddNewTask()}>
@@ -33,6 +37,7 @@ function Taskboard() {
               <Card className={styles.outerCard}>
                 <Card.Body>
                   <Card.Title>In Progress</Card.Title>
+                  {/* Map ba */}
                   <Task />
                 </Card.Body>
               </Card>
@@ -41,6 +46,7 @@ function Taskboard() {
               <Card className={styles.outerCard}>
                 <Card.Body>
                   <Card.Title>Done</Card.Title>
+                  {/* Map ba */}
                   <Task />
                 </Card.Body>
               </Card>
