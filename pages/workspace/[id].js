@@ -14,7 +14,7 @@ import Head from 'next/head';
 function WorkspaceChat() {
   const router = useRouter();
   const {id} = router.query;
-  const [showDropDown, setShowDropDown] = useState(false);
+  const [showDropDown, setShowDropDown] = useState(true);
   const [channel, setChannel] = useState(null);
   const [workspace, setWorkspace] = useState(null);
   const [channelList, setChannelList] = useState(null);
