@@ -86,7 +86,7 @@ export default function Home() {
                   <Row>
                     <Col>
                       <Button className={styles.addWorkspace} onClick={() => setModalShow(true)}>
-                        <div className={styles.workspaceName}>+ Add New Workspace</div>
+                        <div className={styles.addWorkspaceText}>+ Add New Workspace</div>
                       </Button>
 
                       <CenteredModal show={modalShow} onHide={() => setModalShow(false)} fetch={() => refetch()} />

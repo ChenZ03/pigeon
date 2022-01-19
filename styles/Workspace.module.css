@@ -93,14 +93,14 @@
     background-color: lavender;
 }
 
-.relative, .relative2 {
+.relative,
+.relative2 {
     position: relative;
-   
 }
 
-.relative2{
-    margin : 20px;
-    margin-bottom : 40px;
+.relative2 {
+    margin: 20px;
+    margin-bottom: 40px;
 }
 
 .workspaceCard {
@@ -121,6 +121,11 @@
     color: #9ec4e6;
     outline: 3px dashed #9ec4e6;
     outline-offset: -20px;
+}
+
+.addWorkspaceText {
+    text-align: center;
+    font-size: 22px;
 }
 
 .addWorkspace:hover {
@@ -172,21 +177,56 @@
     text-decoration: none;
 }
 
-.buttonAction{
-    display : flex;
+.buttonAction {
+    display: flex;
     justify-content: flex-end;
     align-items: center;
-    width : 50%;
+    width: 50%;
 }
 
-.search{
-   display : flex;
-   justify-content: center;
+.search {
+    display: flex;
+    justify-content: center;
 }
 
-.modelSize{
+.modelSize {
     max-height: 80vh;
-    overflow-y : auto;
+    overflow-y: auto;
+}
+
+.searchInput {
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.invite {
+    background-color: #9ec4e6;
+    color: white;
+}
+
+.invite:hover {
+    background-color: lavender;
+    color: white;
+}
+
+.invite:focus {
+    background-color: #9ec4e6;
+    box-shadow: none;
+}
+
+.remove {
+    background-color: lightcoral;
+    color: white;
+}
+
+.remove:hover {
+    background-color: rgb(235, 108, 108);
+    color: white;
+}
+
+.remove:focus {
+    background-color: lightcoral;
+    box-shadow: none;
 }
 
 
