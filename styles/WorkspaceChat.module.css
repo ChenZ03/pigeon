@@ -85,6 +85,7 @@
 }
 
 .navContainer{
+    position: relative;
     width: 18%;
     height: 100%;
     padding: 0;
@@ -223,4 +224,12 @@
 
 .box2{
     margin-top: -15px;
+}
+
+.leave{
+    position: absolute;
+    width: 100%;
+    padding : 50px;
+    bottom : 0;
+    text-align : center;
 }

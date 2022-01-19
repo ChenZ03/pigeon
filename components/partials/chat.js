@@ -72,14 +72,15 @@ function Chat({channel}){
     }, [fetchChat])
 
       const sendMsg = (e) => {  
+        e.preventDefault()
         let msg = document.getElementById('message').value
         if(msg.length < 1) return
         sendChat({
-          variables : {
+        variables : {
             channel_id : channel.id,
             user_id : JSON.parse(localStorage.getItem('userData')).user.id,
             chat : msg
-          }
+        }
         })
         document.getElementById('message').value = ''
       }
@@ -90,6 +91,8 @@ function Chat({channel}){
             fetchChat.refetch()
         }
     }, [gettingChatData])
+
+    // document.getElementById('mesasge').onSubmit(function() {return false})
 
     return(
         <div className={styles.chatboxContainer}>
@@ -143,8 +146,12 @@ function Chat({channel}){
                 }
               </div>
               <div className={styles.msgContainer}>
-                <form className={styles.msgBox}>
-                  <input type="text" placeholder="Write Message..." className={styles.sendMsg} id="message" />
+                <form className={styles.msgBox} onSubmit={e => {
+                    e.preventDefault();
+                }}>
+                  <input type="text" placeholder="Write Message..." className={styles.sendMsg} id="message" onSubmit={e => {
+                    e.preventDefault();
+                }}/>
                   <i className={"far fa-paper-plane " + styles.sendIcon} onClick={sendMsg}></i>
                 </form>
               </div>

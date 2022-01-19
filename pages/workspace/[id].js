@@ -46,6 +46,18 @@ function WorkspaceChat() {
     }
   `
 
+  const REMOVE_USER = gql`
+    mutation RemoveUserFromWorkspace($userId : String, $workspaceId : String) {
+        removeUserFromWorkspace(workspace : {user_id : $userId, workspace_id : $workspaceId}) {
+        workspace
+        }
+    }
+  `
+
+  const [remove, removeData] = useMutation(REMOVE_USER, {
+      onError : () => removeData.error
+  })
+
   const {loading, error, data, refetch} = useQuery(GET_CHANNELS, {
     variables: {
       id: id
@@ -100,6 +112,28 @@ function WorkspaceChat() {
     setAddChannel(!addingChannel)
   }
 
+  const leave = () => {
+    if(typeof window !== 'undefined' && JSON.parse(localStorage.getItem('userData')).user.id == workspace.owner){
+      console.log('owner')
+    }else{
+      remove({
+        variables : {
+          userId : JSON.parse(localStorage.getItem('userData')).user.id,
+          workspaceId : id
+        }
+      })
+    }
+  }
+
+  useEffect(() => {
+    if(removeData.data){
+      Router.push('/workspace')
+    }
+    if(removeData.error){
+      console.log(removeData.error)
+    }
+  }, [removeData])
+
   
 
   if(channel && workspace && channelList){
@@ -131,7 +165,7 @@ function WorkspaceChat() {
                     channelList.map(chn => {
                       return (
                         <Nav.Link className={styles.navLink2} onClick={changeChannel([chn.id, chn.name])} key={chn.id}>
-                          {chn.name.charAt(0).toUpperCase() + chn.name.slice(1)}
+                          {'#' + chn.name.charAt(0).toUpperCase() + chn.name.slice(1)}
                         </Nav.Link>
                       )
                     })
@@ -145,11 +179,20 @@ function WorkspaceChat() {
                     <p className={styles.addChannel} onClick={addChannel}>Add Channel</p>
                 </div>
               }
+
+              <div className={styles.leave}>
+                {
+                  typeof window !== 'undefined' && JSON.parse(localStorage.getItem('userData')).user.id !== workspace.owner ?
+                  <button className={styles.addChannel} onClick={leave}>Leave Workspace</button>
+                  :
+                  <button className={styles.addChannel} onClick={leave}>Delete Workspace</button>
+                }
+              </div>
              
             </Nav>
           </div>
           <Chat channel={channel} />
-         
+              
         </Row>
       </div>
       
