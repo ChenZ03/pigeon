@@ -9,7 +9,6 @@ import Router from 'next/router';
 import AddChannel from '../../components/partials/addChannel'
 import Chat from '../../components/partials/chat.js'
 import Swal from 'sweetalert2'
-import Head from 'next/head'
 
 
 function WorkspaceChat() {
@@ -273,13 +272,6 @@ function WorkspaceChat() {
   }else{
     return <h1>Loading...</h1>
   }
-
-  return(
-    <Head>
-      <title>Pigeon</title>
-      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-    </Head>
-  )
 
   
 }
