@@ -8,6 +8,8 @@ import {gql, useQuery,  useMutation} from '@apollo/client';
 import Router from 'next/router';
 import AddChannel from '../../components/partials/addChannel'
 import Chat from '../../components/partials/chat.js'
+import Swal from 'sweetalert2'
+import Head from 'next/head'
 
 
 function WorkspaceChat() {
@@ -92,7 +94,11 @@ function WorkspaceChat() {
     }
 
     if(workspaceData.error){
-      alert("Workspace not found")
+      Swal.fire(
+        'Error',
+        'Workspace not found',
+        'error'
+      )
       Router.push('/workspace')
     }
   }, [workspaceData])
@@ -109,7 +115,11 @@ function WorkspaceChat() {
 
   useEffect(() => {
     if(error){
-      alert("Workspace not found")
+      Swal.fire(
+        'Error',
+        'Workspace not found',
+        'error'
+      )
       Router.push('/workspace')
     }
   }, [error])
@@ -129,22 +139,57 @@ function WorkspaceChat() {
 
   const leave = () => {
     if(typeof window !== 'undefined' && JSON.parse(localStorage.getItem('userData')).user.id == workspace.owner){
-      deleteSpace({
-        variables : {
-          userId : JSON.parse(localStorage.getItem('userData')).user.id,
-          workspaceId : id
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You want to delete this workspace?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire(
+            'Deleted!',
+            'Your workspace has been deleted.',
+            'success'
+          )
+          deleteSpace({
+            variables : {
+              userId : JSON.parse(localStorage.getItem('userData')).user.id,
+              workspaceId : id
+            }
+          })
         }
       })
+      
     }else{
-      remove({
-        variables : {
-          userId : JSON.parse(localStorage.getItem('userData')).user.id,
-          workspaceId : id
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You want to leave this workspace?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire(
+            'Leave !',
+            'Leaved workspace',
+            'success'
+          )
+          remove({
+            variables : {
+              userId : JSON.parse(localStorage.getItem('userData')).user.id,
+              workspaceId : id
+            }
+          })
         }
       })
+     
     }
   }
-
   useEffect(() => {
     if(removeData.data){
       Router.push('/workspace')
@@ -228,6 +273,13 @@ function WorkspaceChat() {
   }else{
     return <h1>Loading...</h1>
   }
+
+  return(
+    <Head>
+      <title>Pigeon</title>
+      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+    </Head>
+  )
 
   
 }

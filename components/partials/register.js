@@ -18,7 +18,11 @@ function Register({setLogin, loginHandler}) {
       });
       e.target.reset();
     } else {
-      alert("Password must be the same")
+      Swal.fire(
+        'Password',
+        'Password must be the same',
+        'error'
+      )
     }
   };
 
@@ -55,23 +59,39 @@ function Register({setLogin, loginHandler}) {
   // Google
   useEffect(() => {
     if(glogin.error){
-      alert(glogin.error)
+      Swal.fire(
+        'Google Login',
+        glogin.error,
+        'error'
+      )
     }
 
     if(glogin.data){
-      alert("Login Successfully")
+      Swal.fire(
+        'Google Login',
+        'Login Successfully',
+        'success'
+      )
       loginHandler(glogin.data.googleLogin.token)
     }
   }, [glogin.data, glogin.error])
 
   useEffect(() => {
     if(registerdata.data) {
-      alert("Registered successfully, please proceed to login")
+      Swal.fire(
+        'Register',
+        'Registered successfully, please proceed to login',
+        'success'
+      )
       setLogin(true)
     }
 
     if(registerdata.error){
-      alert(registerdata.error)
+      Swal.fire(
+        'Register',
+        'Registration Failed',
+        'error'
+      )
     }
   }, [registerdata.data, registerdata.error])
 

@@ -1,3 +1,4 @@
+import Head from 'next/head'
 import '../styles/globals.css';
 import {ApolloProvider, ApolloClient, InMemoryCache} from '@apollo/client';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -34,7 +35,12 @@ const client = new ApolloClient({
 
 function MyApp({Component, pageProps}) {
   return (
+    
     <ApolloProvider client={client}>
+      <Head>
+        <title>Pigeon</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
       <Component {...pageProps} />
     </ApolloProvider>
   );
