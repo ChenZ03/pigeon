@@ -1,4 +1,4 @@
-import {Navbar, Container} from 'react-bootstrap';
+import {Navbar, Container, Nav} from 'react-bootstrap';
 import styles from '../../styles/Navbar.module.css';
 import logo from '../images/logo.png';
 import Image from 'next/image';
@@ -9,11 +9,15 @@ function WorkspaceNav() {
       <Navbar.Brand className="mx-5">
         <Image src={logo} alt="#" width={40} height={40} />
       </Navbar.Brand>
-      <Navbar.Toggle />
-      <Navbar.Collapse className="justify-content-end">
-        <Navbar.Text>
-          Signed in as: <a href="#login">Mark Otto</a>
-        </Navbar.Text>
+      <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+      <Navbar.Collapse id="responsive-navbar-nav">
+        <Nav className="me-auto"></Nav>
+        <Nav>
+          <Nav.Link href="#deets">Inv user icon</Nav.Link>
+          <Nav.Link eventKey={2} href="#memes">
+            View users icon
+          </Nav.Link>
+        </Nav>
       </Navbar.Collapse>
     </Navbar>
   );
