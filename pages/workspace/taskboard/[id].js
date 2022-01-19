@@ -10,48 +10,159 @@ function Taskboard() {
   const AddNewTask = () => {};
   const router = useRouter();
   const {id} = router.query;
+
+  const onDragEnd = (result) => {
+    const {source, destination, draggableId} = result;
+
+    if (!destination) {
+      return;
+    }
+
+    if (source.droppableId === destination.droppableId && source.index === destination.index) {
+      return;
+    }
+
+    const id = draggableId;
+    const start = source.droppableId;
+    const end = destination.droppableId;
+
+    // if (start !== end && end === '1') {
+    //   fetch(`${process.env.REACT_APP_API_URL}/todo/complete/${id}`, {
+    //     method: 'PUT',
+    //     headers: {
+    //       'x-auth-token': localStorage.getItem('token'),
+    //     },
+    //   })
+    //     .then((res) => res.json())
+    //     .then((data) => {
+    //       Swal.fire({
+    //         icon: 'success',
+    //         title: data.msg,
+    //         showConfirmButton: false,
+    //         timer: 1500,
+    //       });
+    //       getTodos();
+    //     });
+    // } else if (start !== end) {
+    //   fetch(`${process.env.REACT_APP_API_URL}/todo/complete/${id}`, {
+    //     method: 'PUT',
+    //     headers: {
+    //       'x-auth-token': localStorage.getItem('token'),
+    //     },
+    //   })
+    //     .then((res) => res.json())
+    //     .then((data) => {
+    //       Swal.fire({
+    //         icon: 'success',
+    //         title: data.msg,
+    //         showConfirmButton: false,
+    //         timer: 1500,
+    //       });
+    //       getTodos();
+    //     });
+    // }
+  };
+
   return (
     <>
       <MainNav />
       {/* chg to taksboard nav */}
       <div className={styles.container}>
         <Container>
-          <DragDropContext>
+          <DragDropContext onDragEnd={onDragEnd}>
             <h4 className="text-white">Task Board</h4>
             {/* workspace name */}
             {/* display as navbar brand */}
             <Row className="mt-3">
               <Col lg="4">
-                <Card className={styles.outerCard}>
-                  <Card.Body>
-                    <Card.Title>To-Do</Card.Title>
-                    {/* Map ba */}
-                    <Task />
-                    <Container>
-                      <Button className={styles.addButton} onClick={() => AddNewTask()}>
-                        + Add New Task
-                      </Button>
-                    </Container>
-                  </Card.Body>
-                </Card>
+                <Droppable droppableId="0">
+                  {(provided, snapshot) => (
+                    <Card className={styles.outerCard} ref={provided.innerRef} {...provided.droppableProps}>
+                      <Card.Body>
+                        <Card.Title>To-Do</Card.Title>
+
+                        <Draggable
+                        // key={todo._id}
+                        //  draggableId={todo._id}
+                        // index={index}
+                        >
+                          {(provided, snapshot) => (
+                            <Task
+                              ref={provided.innerRef}
+                              // key={todo._id}
+                              // index={index}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            />
+                          )}
+                        </Draggable>
+                        <Container>
+                          <Button className={styles.addButton} onClick={() => AddNewTask()}>
+                            + Add New Task
+                          </Button>
+                        </Container>
+                      </Card.Body>
+                    </Card>
+                  )}
+                  {/* Map ba */}
+                </Droppable>
               </Col>
+
               <Col lg="4">
-                <Card className={styles.outerCard}>
-                  <Card.Body>
-                    <Card.Title>In Progress</Card.Title>
-                    {/* Map ba */}
-                    <Task />
-                  </Card.Body>
-                </Card>
+                <Droppable droppableId="1">
+                  {(provided, snapshot) => (
+                    <Card className={styles.outerCard} ref={provided.innerRef} {...provided.droppableProps}>
+                      <Card.Body>
+                        <Card.Title>In Progress</Card.Title>
+
+                        <Draggable
+                        // key={todo._id}
+                        //  draggableId={todo._id}
+                        // index={index}
+                        >
+                          {(provided, snapshot) => (
+                            <Task
+                              ref={provided.innerRef}
+                              // key={todo._id}
+                              // index={index}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            />
+                          )}
+                        </Draggable>
+                      </Card.Body>
+                    </Card>
+                  )}
+                </Droppable>
               </Col>
+
               <Col lg="4">
-                <Card className={styles.outerCard}>
-                  <Card.Body>
-                    <Card.Title>Done</Card.Title>
-                    {/* Map ba */}
-                    <Task />
-                  </Card.Body>
-                </Card>
+                <Droppable droppableId="2">
+                  {(provided, snapshot) => (
+                    <Card className={styles.outerCard} ref={provided.innerRef} {...provided.droppableProps}>
+                      <Card.Body>
+                        <Card.Title>Done</Card.Title>
+
+                        <Draggable
+                        // key={todo._id}
+                        //  draggableId={todo._id}
+                        // index={index}
+                        >
+                          {(provided, snapshot) => (
+                            <Task
+                              ref={provided.innerRef}
+                              // key={todo._id}
+                              // index={index}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            />
+                          )}
+                        </Draggable>
+                      </Card.Body>
+                    </Card>
+                  )}
+                  {/* Map ba */}
+                </Droppable>
               </Col>
             </Row>
           </DragDropContext>
