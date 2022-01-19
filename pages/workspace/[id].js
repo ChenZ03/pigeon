@@ -4,9 +4,10 @@ import {Nav, Navbar, Container, Row, Col, Form, Button} from 'react-bootstrap';
 import styles from '../../styles/WorkspaceChat.module.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import {useState, useEffect} from 'react';
-import {gql, useQuery, useMutation, useSubscription} from '@apollo/client';
+import {gql, useQuery, useMutation, useSubscription, useLazyQuery} from '@apollo/client';
 import Router from 'next/router';
 import AddChannel from '../../components/partials/addChannel';
+import Chat from '../../components/partials/chat.js';
 
 function WorkspaceChat() {
   const router = useRouter();
@@ -15,7 +16,7 @@ function WorkspaceChat() {
   const [channel, setChannel] = useState(null);
   const [workspace, setWorkspace] = useState(null);
   const [channelList, setChannelList] = useState(null);
-  const [chats, setChats] = useState(null);
+
   const [addingChannel, setAddChannel] = useState(false);
 
   if (typeof window !== 'undefined' && !localStorage.hasOwnProperty('userData')) {
@@ -162,6 +163,7 @@ function WorkspaceChat() {
               </div>
             </div>
           </div>
+          <Chat channel={channel} />
         </Row>
       </div>
     );
