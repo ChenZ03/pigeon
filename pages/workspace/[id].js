@@ -4,7 +4,7 @@ import {Nav, Navbar, Container, Row, Col, Form, Button} from 'react-bootstrap';
 import styles from '../../styles/WorkspaceChat.module.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import {useState, useEffect} from 'react';
-import {gql, useQuery, useMutation, useSubscription} from '@apollo/client';
+import {gql, useQuery, useMutation, useSubscription, useLazyQuery} from '@apollo/client';
 import Router from 'next/router';
 import AddChannel from '../../components/partials/addChannel'
 
@@ -18,6 +18,9 @@ function WorkspaceChat() {
   const [channelList, setChannelList] = useState(null)
   const [chats, setChats] = useState(null)
   const [addingChannel, setAddChannel] = useState(false)
+  const [skip, setSkip] = useState(true)
+  var name = ''
+  var repeat = 0
 
   if (typeof window !== 'undefined' && !localStorage.hasOwnProperty('userData')) {
     Router.push('/');
@@ -46,13 +49,48 @@ function WorkspaceChat() {
   `
 
   const GET_CHATS = gql`
-    query GetChat($Id: String) {
-      getChat(id: $Id) {
-        name
+    query GetChat($id: String) {
+      getChat(id: $id) {
+        id
+        from{
+          username
+          id
+        }
         chat
       }
     }
   `
+
+  const SEND_CHAT = gql`
+    mutation SendChat($channel_id : String, $user_id : String , $chat : String) {
+      sendChat(chat : {channel_id : $channel_id , user_id : $user_id, chat : $chat}) {
+        from{
+          id
+          username
+        }
+        chat
+      }
+    }
+  `
+
+  const CHAT_RECEIVED = gql`
+    subscription ChatSend($channelId: String) {
+      chatSend(channel_id: $channelId) {
+        id
+        from {
+          id
+          username
+        }
+        chat
+      }
+    }
+  `
+
+  var gettingChatData = useSubscription(CHAT_RECEIVED, {
+    variables: {
+      channelId : "61e010b436518726aba67791"
+    }
+  })
 
   const {loading, error, data, refetch} = useQuery(GET_CHANNELS, {
     variables: {
@@ -65,6 +103,23 @@ function WorkspaceChat() {
       id : id
     }
   })
+
+  const [fetchChat, fetchChatData] = useLazyQuery(GET_CHATS)
+
+  const [sendChat, sendChatData] = useMutation(SEND_CHAT, {
+    onError : function() {return}
+  })
+
+  useEffect(() => {
+    if(channel && gettingChatData.data && !gettingChatData.loading){
+      console.log(fetchChatData)
+      fetchChat({
+        variables: {
+          id : channel.id
+        }
+      })
+    }
+  }, [gettingChatData])
 
 
   useEffect(() => {
@@ -86,6 +141,23 @@ function WorkspaceChat() {
   }, [data])
 
   useEffect(() => {
+    if(channel){
+      fetchChat({
+        variables: {
+          id : channel.id
+        }
+      })
+    }
+  }, [channel])
+
+  useEffect(() => {
+    if(fetchChatData.data){
+      setChats(fetchChatData.data.getChat)
+    }
+  }, [fetchChatData])
+
+
+  useEffect(() => {
     if(error){
       alert("Workspace not found")
       Router.push('/workspace')
@@ -103,6 +175,19 @@ function WorkspaceChat() {
   const addChannel = () => {
     setShowDropDown(true)
     setAddChannel(!addingChannel)
+  }
+
+  const sendMsg = (e) => {
+    let msg = document.getElementById('message').value
+    if(msg.length < 1) return
+    sendChat({
+      variables : {
+        channel_id : channel.id,
+        user_id : JSON.parse(localStorage.getItem('userData')).user.id,
+        chat : msg
+      }
+    })
+    document.getElementById('message').value = ''
   }
 
   if(channel && workspace && channelList){
@@ -158,10 +243,65 @@ function WorkspaceChat() {
                   "#" + channel.name.charAt(0).toUpperCase() + channel.name.slice(1)
                 }</h3>
               </div>
+              <div className={styles.chats}>
+                {
+                  fetchChatData.loading &&
+                  <div className={styles.center}>
+                    <h1>Loading...</h1>
+                  </div>
+                }
+                {
+                  chats && chats.length > 0 && !fetchChatData.loading ? 
+                  <>
+                  {
+                    chats.map(chat => {
+                      if(name == chat.from.username){
+                        repeat += 1
+                        return (
+                          <div className={repeat > 1 ? styles.box : styles.box2} key={chat.id}>
+                            <p className={styles.singleP}>{chat.chat}</p>
+                            <br />
+                          </div>
+                        )
+                      }else{
+                        repeat = 0
+                        name = chat.from.username
+                        let shortName = '';
+
+                        if (chat.from.username.split(' ').length > 1) {
+                          let name1 = chat.from.username.split(' ').shift()[0].toUpperCase();
+                          let name2 = chat.from.username.split(' ').pop()[0].toUpperCase();
+                          shortName = name1 + name2;
+                        } else {
+                          shortName = chat.from.username[0].toUpperCase();
+                        }
+  
+                        return (
+                          <div className={styles.singleChatLeft} key={chat.id}>
+                            <div className={styles.flex}>
+                              <div className={styles.circle}>{shortName}</div>
+                              <div className={styles.margin}>
+                                <h5><strong>{chat.from.username}</strong></h5>
+                                <p>{chat.chat}</p>
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      }
+                    })
+                  }
+                  </>
+                  :
+                  <div className={styles.center}>
+                    <h1>No chat history</h1>
+                  </div>
+                  
+                }
+              </div>
               <div className={styles.msgContainer}>
                 <form className={styles.msgBox}>
-                  <input type="text" placeholder="Write Message..." className={styles.sendMsg} />
-                  <i className={"far fa-paper-plane " + styles.sendIcon}></i>
+                  <input type="text" placeholder="Write Message..." className={styles.sendMsg} id="message" />
+                  <i className={"far fa-paper-plane " + styles.sendIcon} onClick={sendMsg}></i>
                 </form>
               </div>
             </div>
