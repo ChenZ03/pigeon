@@ -138,7 +138,7 @@ function UserModal(props) {
     <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          {props.type == 'invite' ? 'Invite User to Workspace!' : 'User list'}
+          {props.type == 'invite' ? 'Invite User to Workspace!' : 'Users'}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className={styles.modelSize}>
