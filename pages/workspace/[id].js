@@ -4,7 +4,7 @@ import {Nav, Navbar, Container, Row, Col, Form, Button} from 'react-bootstrap';
 import styles from '../../styles/WorkspaceChat.module.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import {useState, useEffect} from 'react';
-import {gql, useQuery, useMutation, useSubscription, useLazyQuery} from '@apollo/client';
+import {gql, useQuery,  useMutation} from '@apollo/client';
 import Router from 'next/router';
 import AddChannel from '../../components/partials/addChannel'
 import Chat from '../../components/partials/chat.js'
@@ -46,6 +46,17 @@ function WorkspaceChat() {
     }
   `
 
+  const DELETE_WORKSPACE = gql`
+    mutation DeleteWorkspace($workspaceId : String, $userId : String) {
+      deleteWorkspace(workspace : {workspace_id : $workspaceId, user_id : $userId}) {
+        workspace
+        id
+        username
+        email
+      }
+    }
+  `
+
   const {loading, error, data, refetch} = useQuery(GET_CHANNELS, {
     variables: {
       id: id
@@ -56,6 +67,22 @@ function WorkspaceChat() {
     variables: {
       id : id
     }
+  })
+
+  const REMOVE_USER = gql`
+    mutation RemoveUserFromWorkspace($userId : String, $workspaceId : String) {
+        removeUserFromWorkspace(workspace : {user_id : $userId, workspace_id : $workspaceId}) {
+        workspace
+        }
+    }
+  `
+
+  const [remove, removeData] = useMutation(REMOVE_USER, {
+      onError : () => removeData.error
+  })
+
+  const [deleteSpace, deleteData] = useMutation(DELETE_WORKSPACE, {
+    onError : () => deleteData.error
   })
 
 
@@ -99,6 +126,42 @@ function WorkspaceChat() {
     setShowDropDown(true)
     setAddChannel(!addingChannel)
   }
+
+  const leave = () => {
+    if(typeof window !== 'undefined' && JSON.parse(localStorage.getItem('userData')).user.id == workspace.owner){
+      deleteSpace({
+        variables : {
+          userId : JSON.parse(localStorage.getItem('userData')).user.id,
+          workspaceId : id
+        }
+      })
+    }else{
+      remove({
+        variables : {
+          userId : JSON.parse(localStorage.getItem('userData')).user.id,
+          workspaceId : id
+        }
+      })
+    }
+  }
+
+  useEffect(() => {
+    if(removeData.data){
+      Router.push('/workspace')
+    }
+    if(removeData.error){
+      console.log(removeData.error)
+    }
+  }, [removeData])
+
+  useEffect(() => {
+    if(deleteData.data){
+      Router.push('/workspace')
+    }
+    if(deleteData.error){
+      console.log(deleteData.error) 
+    }
+  }, [deleteData])
 
   
 
@@ -147,6 +210,14 @@ function WorkspaceChat() {
               }
              
             </Nav>
+            <div className={styles.leave}>
+              {
+                typeof window !== 'undefined' && JSON.parse(localStorage.getItem('userData')).user.id !== workspace.owner ?
+                <button className={styles.addChannel} onClick={leave}>Leave Workspace</button>
+                :
+                <button className={styles.addChannel} onClick={leave}>Delete Workspace</button>
+              }
+            </div>
           </div>
           <Chat channel={channel} />
          
