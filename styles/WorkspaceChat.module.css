@@ -1,34 +1,159 @@
+.all{
+    height: 100vh;
+    overflow:hidden;
+}
+
 .sideNav {
     flex-direction: column;
-    width: 325px;
+    width: 100%;
     background-color: #9ec4e6;
-    height: 95vh;
+    height: 92vh;
     color: white;
-    padding-left: 30px;
 }
 
 .navLink {
     color: white !important;
+    font-size: 18px;
+    padding-left : 30px;
+    padding-top : 30px;
+    display : flex;
+    width: 80%;
 }
 
 .navBrand {
     color: white !important;
-    font-size: 20px;
-    font-weight: bold;
+    font-size: 25px;
+    font-weight: regular;
+    border-bottom: 2px solid whitesmoke;
+    width: 100%;
+    height: 80px;
+    display : flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .relative {
     position: relative;
-    height: 95vh;
+    height: 90vh;
+    padding: 0;
 }
 
 .msgContainer {
     position: absolute;
     bottom: 0;
     width: 100%;
-    display: flex;
 }
 
 .msgBox {
     width: 100%;
+    position: relative;
+    border-top: 2px solid #9ec4e6;
+    display : flex;
+    align-items: center;
+}
+
+.sendMsg{
+    width : 95%;
+    padding : 30px;
+    border : none;
+}
+
+.sendMsg:focus{
+    outline : none !important;
+}
+
+.icon{
+    font-size: 25px;
+    padding-right: 20px;
+    cursor: pointer;
+}
+
+.channelName {
+    color: black !important;
+    font-size: 25px;
+    font-weight: regular;
+    border-bottom: 2px solid #9ec4e6;
+    width: 100%;
+    height: 80px;
+    display : flex;
+    align-items: center;
+    padding-left : 20px;
+}
+
+.row{
+    display : flex;
+}
+
+.navContainer{
+    width: 18%;
+    height: 100%;
+    padding: 0;
+}
+
+.chatboxContainer{
+    padding: 0;
+    width: 82%;
+}
+
+.sendButton{
+    width: 150px;
+}
+
+.sendIcon{
+    font-size: 40px;
+    color: #9ec4e6;
+    right : 40px;
+    cursor: pointer;
+}
+
+.navLink2, .navLink3 {
+    color: white !important;
+    font-size: 18px;
+    padding-left : 65px;
+    padding-top : 30px;
+    display : flex;
+    width: 80%;
+}
+
+.navLink3{
+    width: 100% !important;
+}
+
+.channelLink{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.addChannel {
+    border: 2px solid whitesmoke;
+    border-radius : 10px;
+    padding: 10px;
+    font-size : 15px;
+    cursor: pointer;
+}
+
+.accept {
+    margin-left: 20px;
+    background-color: #9ec4e6;
+    color: white;
+    border: none;
+}
+.accept:focus {
+    background-color: #9ec4e6;
+    box-shadow: none;
+}
+
+.channelInput{
+    width: 70%;
+    background-color: #9ec4e6;
+    border : none;
+    border-bottom: 2px solid whitesmoke;
+    color: whitesmoke;
+}
+
+.channelInput:focus{
+    outline: none;
 }

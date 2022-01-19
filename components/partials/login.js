@@ -18,8 +18,8 @@ function Login({setLogin, loginHandler}) {
   `
 
   const GOOGLELOGIN = gql`
-    mutation GoogleLogin($email : String!) {
-      googleLogin (user : {email : $email}) {
+    mutation GoogleLogin($email : String!, $username: String!) {
+      googleLogin (user : {email : $email, username : $username}) {
         token
       }
     }
@@ -60,6 +60,7 @@ function Login({setLogin, loginHandler}) {
   useEffect(() => {
     if(glogin.error){
       alert(glogin.error)
+      // console.log(glogin.error)
     }
 
     if(glogin.data){
@@ -71,10 +72,11 @@ function Login({setLogin, loginHandler}) {
   useEffect(() => { 
       const handleGoogleSignIn = async res => {
           let decoded = jwt_decode(res.credential)  
+          // console.log(decoded)
           googleLogin({
             variables : {
               email : decoded.email,
-              username : decoded.username
+              username : decoded.given_name
             }
           })
       }

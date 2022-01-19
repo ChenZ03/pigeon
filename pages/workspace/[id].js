@@ -1,68 +1,181 @@
 import {useRouter} from 'next/router';
-// import MainNav from '../../components/partials/MainNav';
 import WorkspaceNav from '../../components/partials/WorkspaceNav';
 import {Nav, Navbar, Container, Row, Col, Form, Button} from 'react-bootstrap';
 import styles from '../../styles/WorkspaceChat.module.css';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {useState} from 'react';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import {useState, useEffect} from 'react';
+import {gql, useQuery, useMutation, useSubscription} from '@apollo/client';
+import Router from 'next/router';
+import AddChannel from '../../components/partials/addChannel'
+
 
 function WorkspaceChat() {
   const router = useRouter();
   const {id} = router.query;
   const [showDropDown, setShowDropDown] = useState(false);
+  const [channel, setChannel] = useState(null);
+  const [workspace, setWorkspace] = useState(null)
+  const [channelList, setChannelList] = useState(null)
+  const [chats, setChats] = useState(null)
+  const [addingChannel, setAddChannel] = useState(false)
 
-  return (
-    <>
-      <WorkspaceNav />
-      <Row>
-        <Col lg="2">
-          <Nav defaultActiveKey="/workspace" className={styles.sideNav}>
-            <Navbar.Brand className={styles.navBrand} href="/workspace">
-              Active
-            </Navbar.Brand>
-            <Nav.Link className={styles.navLink} href={`/workspace/taskboard/taskboard`}>
-              Task Board
-            </Nav.Link>
+  if (typeof window !== 'undefined' && !localStorage.hasOwnProperty('userData')) {
+    Router.push('/');
+  }
 
-            <Navbar.Text className={styles.navLink} href="link-2">
-              <button
-                onClick={() => {
-                  showDropDown === true ? setShowDropDown(false) : setShowDropDown(true);
-                }}
-              >
-                V
-              </button>
-              Channels
-            </Navbar.Text>
-            {showDropDown && (
-              <>
-                <Nav.Link className={styles.navLink} href="link-1">
-                  Channel 1
-                </Nav.Link>
+  const GET_CHANNELS = gql`
+    query GetChannels($id: String) {
+      getChannels(id: $id) {
+        id
+        name
+      }
+    }
+  `
 
-                <Nav.Link className={styles.navLink} href="link-2">
-                  Channel2
-                </Nav.Link>
-              </>
-            )}
-          </Nav>
-        </Col>
-        <Col lg="10">
-          <div className={styles.relative}>
-            <h3 className="p-3">#ChannelName</h3>
-            <Form className={styles.msgContainer}>
-              <Form.Group className={styles.msgBox}>
-                <Form.Control as="textarea" type="text" placeholder="Send Message..." className={styles.sendMsg} />
-              </Form.Group>
-              <Button className={styles.sendButton} type="submit">
-                Submit
-              </Button>
-            </Form>
+
+  const GET_CURRENTSPACE = gql`
+    query GetCurrentWorkSpace($id: String) {
+      getCurrentWorkSpace(id: $id) {
+        id
+        name
+        owner
+        channels
+        users
+      }
+    }
+  `
+
+  const GET_CHATS = gql`
+    query GetChat($Id: String) {
+      getChat(id: $Id) {
+        name
+        chat
+      }
+    }
+  `
+
+  const {loading, error, data, refetch} = useQuery(GET_CHANNELS, {
+    variables: {
+      id: id
+    },
+  });
+
+  const workspaceData = useQuery(GET_CURRENTSPACE, {
+    variables: {
+      id : id
+    }
+  })
+
+
+  useEffect(() => {
+    if(workspaceData.data){
+      setWorkspace(workspaceData.data.getCurrentWorkSpace)
+    }
+
+    if(workspaceData.error){
+      alert("Workspace not found")
+      Router.push('/workspace')
+    }
+  }, [workspaceData])
+
+  useEffect(() => {
+    if(data){
+      setChannel(data.getChannels[0])
+      setChannelList(data.getChannels)
+    }
+  }, [data])
+
+  useEffect(() => {
+    if(error){
+      alert("Workspace not found")
+      Router.push('/workspace')
+    }
+  }, [error])
+
+  const changeChannel = id => event => {
+    event.preventDefault()
+    setChannel({
+      id : id[0],
+      name : id[1]
+    })
+  }
+
+  const addChannel = () => {
+    setShowDropDown(true)
+    setAddChannel(!addingChannel)
+  }
+
+  if(channel && workspace && channelList){
+    return (
+      <div className={styles.all}>
+        <WorkspaceNav id={id}  owner={workspace.owner}/>
+        <Row className={styles.row}>
+          <div className={styles.navContainer}>
+            <Nav defaultActiveKey="/workspace" className={styles.sideNav}>
+              <Navbar.Brand className={styles.navBrand}>
+                {workspace.name}
+              </Navbar.Brand>
+              <div className={styles.navLink} onClick={() => Router.push(`/workspace/taskboard/taskboard`)}>
+                <i className={"fas fa-tasks " + styles.icon}></i>
+                Task Board
+              </div>
+  
+              <div className={styles.navLink} href="link-2">
+                <i className={"fas fa-caret-down " + styles.icon} onClick={() => {
+                    showDropDown === true ? setShowDropDown(false) : setShowDropDown(true);
+                    setAddChannel(false)
+                  }}
+                ></i>
+                Channels
+              </div>
+              {showDropDown && (
+                <>
+                  {
+                    channelList.map(chn => {
+                      return (
+                        <Nav.Link className={styles.navLink2} onClick={changeChannel([chn.id, chn.name])} key={chn.id}>
+                          {chn.name.charAt(0).toUpperCase() + chn.name.slice(1)}
+                        </Nav.Link>
+                      )
+                    })
+                  }
+                  {addingChannel && <AddChannel channelList={channelList} setAddChannel={setAddChannel} id={id} refetch={refetch} />}
+                </>
+              )}
+              {
+                typeof window !== 'undefined' && JSON.parse(localStorage.getItem('userData')).user.id == workspace.owner &&
+                <div className={styles.channelLink}>
+                    <p className={styles.addChannel} onClick={addChannel}>Add Channel</p>
+                </div>
+              }
+             
+            </Nav>
           </div>
-        </Col>
-      </Row>
-    </>
-  );
+          <div className={styles.chatboxContainer}>
+            <div className={styles.relative}>
+              <div className={styles.channelName}>
+                <h3 className="p-3">{
+                  "#" + channel.name.charAt(0).toUpperCase() + channel.name.slice(1)
+                }</h3>
+              </div>
+              <div className={styles.msgContainer}>
+                <form className={styles.msgBox}>
+                  <input type="text" placeholder="Write Message..." className={styles.sendMsg} />
+                  <i className={"far fa-paper-plane " + styles.sendIcon}></i>
+                </form>
+              </div>
+            </div>
+          </div>
+         
+        </Row>
+      </div>
+      
+    );
+  }else{
+    return <h1>Loading...</h1>
+  }
+
+  
 }
 
 export default WorkspaceChat;

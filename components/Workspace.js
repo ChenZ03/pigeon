@@ -1,4 +1,3 @@
-import Router from 'next/router';
 import {Card, Container, Row, Col} from 'react-bootstrap';
 import styles from '../styles/Workspace.module.css';
 
@@ -15,8 +14,7 @@ function Workspace({data}) {
   }
 
   const onClickHandler = (e) => {
-    Router.push('/workspace/id');
-    console.log(id);
+    window.open(`/workspace/${id}`)
   };
 
   return (

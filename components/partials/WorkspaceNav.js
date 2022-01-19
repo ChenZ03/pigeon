@@ -1,25 +1,43 @@
-import {Navbar, Container, Nav} from 'react-bootstrap';
-import styles from '../../styles/Navbar.module.css';
+import {Navbar, Container} from 'react-bootstrap';
+import styles from '../../styles/WorkspaceNav.module.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import logo from '../images/logo.png';
 import Image from 'next/image';
+import Router from 'next/router';
+import {useState, useEffect} from 'react'
+import UserModal from '../modals/user'
 
-function WorkspaceNav() {
+
+function WorkspaceNav({id, owner}) {
+  const [modalShow, setModalShow] = useState(false);
+  const [type, setType] = useState(null)
   return (
     <Navbar className={styles.navbarBackground}>
-      <Navbar.Brand className="mx-5">
-        <Image src={logo} alt="#" width={40} height={40} />
+      <Navbar.Brand className="mx-5" className={styles.logo}>
+        <Image src={logo} alt="#" width={50} height={50} onClick={() => Router.push('/workspace')} />
       </Navbar.Brand>
-      <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-      <Navbar.Collapse id="responsive-navbar-nav">
-        <Nav className="me-auto"></Nav>
-        <Nav>
-          <Nav.Link href="#deets">Inv user icon</Nav.Link>
-          <Nav.Link eventKey={2} href="#memes">
-            View users icon
-          </Nav.Link>
-        </Nav>
+      <Navbar.Toggle />
+      <Navbar.Collapse className="justify-content-end">
+        <Navbar.Text>
+         
+          <div className={styles.users}>
+            {
+              typeof window !== 'undefined' && JSON.parse(localStorage.getItem('userData')).user.id == owner &&
+              <i className={"fas fa-user-plus " + styles.icon} onClick={() => {
+                setModalShow(true)
+                setType("invite")
+              }} ></i>
+            }
+            <i className={"fas fa-users " + styles.icon} onClick={() => {
+              setModalShow(true)
+              setType("users")
+            }} ></i>
+          </div>
+        </Navbar.Text>
       </Navbar.Collapse>
+      <UserModal show={modalShow} onHide={() => setModalShow(false)} type={type} id={id} owner={owner}  />
     </Navbar>
+
   );
 }
 

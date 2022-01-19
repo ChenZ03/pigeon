@@ -1,0 +1,23 @@
+.navbarBackground{
+    width: 100%;
+    border-bottom: 2px solid whitesmoke;
+    background-color: #9ec4e6;
+}
+
+.logo{
+    margin-left: 5%;
+    cursor: pointer;
+}
+
+.users{
+    display : flex;
+    justify-content : space-between;
+    font-size: 30px;
+    color: whitesmoke;
+}
+
+.icon{
+    padding-left : 20px;
+    padding-right: 20px;
+    cursor: pointer;
+}
