@@ -3,6 +3,7 @@ import {gql, useMutation, useQuery} from '@apollo/client';
 import {Form, Button} from 'react-bootstrap';
 import styles from '../../styles/Register.module.css';
 import jwt_decode from 'jwt-decode'
+import Swal from 'sweetalert2'
 
 function Login({setLogin, loginHandler}) {
   const [user, setUser] = useState({});
@@ -48,23 +49,38 @@ function Login({setLogin, loginHandler}) {
 
   useEffect(() => {
     if(loginData.error){
-      alert(loginData.error)
+      Swal.fire(
+        'Login',
+        'Invalid Credentails',
+        'error'
+      )
     }
 
     if(loginData.data){
-      alert("Login Successfully")
+      Swal.fire(
+        'Login',
+        'Login Successfully',
+        'success'
+      )
       loginHandler(loginData.data.login.token)
     }
   }, [loginData.data, loginData.error])
 
   useEffect(() => {
     if(glogin.error){
-      alert(glogin.error)
-      // console.log(glogin.error)
+      Swal.fire(
+        'Google Login',
+        glogin.error,
+        'error'
+      )
     }
 
     if(glogin.data){
-      alert("Login Successfully")
+      Swal.fire(
+        'Google Login',
+        'Login Successfully',
+        'success'
+      )
       loginHandler(glogin.data.googleLogin.token)
     }
   }, [glogin.data, glogin.error])

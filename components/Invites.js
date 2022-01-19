@@ -2,6 +2,7 @@ import styles from '../styles/Workspace.module.css';
 import {Row, Col, Button} from 'react-bootstrap';
 import {gql, useMutation, useQuery} from '@apollo/client';
 import { useEffect } from 'react';
+import Swal from 'sweetalert2'
 
 function Invites({data,  declineinv, acceptinv}) {
   let {id, name} = data
@@ -59,24 +60,42 @@ function Invites({data,  declineinv, acceptinv}) {
 
   useEffect(() => {
     if(acceptData.data){
-      alert("Workspace invitation accepeted")
+      Swal.fire(
+        'Accept',
+        'You accept the invitation !',
+        'success'
+      )
       acceptinv()
     }
 
     if(acceptData.error){
-      alert(acceptData.error)
       console.log(JSON.stringify(acceptData.error, null, 2));
     }
   }, [acceptData.data, acceptData.error])
 
   useEffect(() => {
     if(declineData.data){
-      alert("Workspace invitation declined")
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You want to decline this invitation?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire(
+            'Decline',
+            'Invitation declined',
+            'success'
+          )
+        }
+      })
       declineinv()
     }
 
     if(declineData.error){
-      alert(declineData.error)
       console.log(JSON.stringify(declineData.error, null, 2));
     }
   }, [declineData.data, declineData.error])

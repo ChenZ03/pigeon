@@ -6,6 +6,7 @@ import Router from 'next/router';
 import {useState, useEffect} from 'react';
 import InvitesModal from '../modals/invites';
 import {gql, useQuery, useSubscription} from '@apollo/client';
+import Swal from 'sweetalert2'
 
 function MainNav({setLogin, setHome, invitation}) {
   const [modalShow, setModalShow] = useState(false);
@@ -93,9 +94,27 @@ function MainNav({setLogin, setHome, invitation}) {
                 <Nav.Link
                   className={styles.navtext}
                   onClick={() => {
-                    localStorage.removeItem('userData');
-                    localStorage.removeItem('token');
-                    Router.push('/');
+                    Swal.fire({
+                      title: 'Are you sure to logout?',
+                      text: "You won't be able to revert this!",
+                      icon: 'warning',
+                      showCancelButton: true,
+                      confirmButtonColor: '#3085d6',
+                      cancelButtonColor: '#d33',
+                      confirmButtonText: 'Yes'
+                    }).then((result) => {
+                      if (result.isConfirmed) {
+                        Swal.fire(
+                          'Logout',
+                          'Logout Successfully',
+                          'success'
+                        )
+                        localStorage.removeItem('userData');
+                        localStorage.removeItem('token');
+                        Router.push('/');
+                      }
+                    })
+                   
                   }}
                 >
                   Logout

@@ -2,6 +2,8 @@ import {Modal, Button, Container, Form, Row, Col} from 'react-bootstrap';
 import styles from '../../styles/Workspace.module.css';
 import {gql, useMutation} from '@apollo/client';
 import {useEffect} from 'react';
+import Swal from 'sweetalert2'
+import Head from 'next/head'
 
 function CenteredModal(props) {
   const onSubmitHandler = (e) => {
@@ -40,13 +42,22 @@ function CenteredModal(props) {
     }
 
     if (data) {
-      alert('Workspace created successfully');
+      Swal.fire(
+        'Workspace',
+        'Workspace created successfully',
+        'success'
+      )
       props.onHide();
       props.fetch();
     }
   }, [error, data]);
 
   return (
+    <>
+    <Head>
+      <title>Pigeon | Workspace</title>
+      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+    </Head>
     <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">Name your workspace!</Modal.Title>
@@ -76,6 +87,7 @@ function CenteredModal(props) {
         </Container>
       </Modal.Body>
     </Modal>
+    </>
   );
 }
 

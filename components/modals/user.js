@@ -2,6 +2,7 @@ import {Modal, Button, Container, Form, Row, Col} from 'react-bootstrap';
 import styles from '../../styles/Workspace.module.css';
 import {gql, useMutation, useQuery} from '@apollo/client';
 import {useState, useEffect} from 'react';
+import Swal from 'sweetalert2'
 
 function UserModal(props) {
   const [userList, setUserList] = useState([]);
@@ -97,22 +98,34 @@ function UserModal(props) {
 
   useEffect(() => {
     if (inviteData.data) {
-      window.alert('User Invited successfully');
+      Swal.fire(
+        'Invite',
+        'User Invited successfully',
+        'success'
+      )
     }
 
     if (inviteData.error) {
-      window.alert('Pending Invitation / User exist in workspace');
+      Swal.fire(
+        'Error',
+        'User exists in workspace / Invitation pending',
+        'error'
+      )
     }
   }, [inviteData.data, inviteData.error]);
 
   useEffect(() => {
     if (removeData.data) {
-      window.alert('User removed');
+      Swal.fire(
+        'Remove',
+        'User removed successfully',
+        'success'
+      )
       spaceUser.refetch();
     }
 
     if (removeData.error) {
-      window.alert('Error');
+      console.log(removeData.error)
     }
   }, [removeData.data, removeData.error]);
 
