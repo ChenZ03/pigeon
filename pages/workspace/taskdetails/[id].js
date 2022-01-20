@@ -3,6 +3,7 @@ import {Button, Card, Col, Container, Nav, Navbar, Row, Form} from 'react-bootst
 import styles from '../../../styles/TaskDetails.module.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import {useRouter} from 'next/router';
+import Router from 'next/router';
 import Comments from '../../../components/Comments';
 
 function TaskDetails() {
