@@ -1,6 +1,7 @@
 import styles from '../../styles/WorkspaceChat.module.css';
-import {gql, useQuery, useMutation, useSubscription} from '@apollo/client';
+import {gql, useMutation} from '@apollo/client';
 import {useEffect} from 'react';
+import Swal from 'sweetalert2'
 
 function AddChannel({channelList, setAddChannel, id , refetch}){
 
@@ -21,12 +22,21 @@ function AddChannel({channelList, setAddChannel, id , refetch}){
 
     const acceptHandler = () => {
         let channelName = document.getElementById('channelName').value.toLowerCase()
+        console.log(channelName)
         if(channelName.length < 1){
-            alert('Name must be at least 1 character')
+            Swal.fire(
+                "Error",
+                "Name must be at least 1 character",
+                "error"
+            )
             return
         }
         if(channelNameList.includes(channelName)){
-            alert('Channel exists in this workspace')
+            Swal.fire(
+                "Error",
+                "Channel Exists in this workspace",
+                "error"
+            )
             return
         }
         add({
