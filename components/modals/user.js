@@ -15,7 +15,7 @@ function UserModal(props) {
         username
       }
     }
-  `;
+  `; 
 
   const GET_ALL_USERS = gql`
     query GetAllUsers($name: String) {

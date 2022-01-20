@@ -5,11 +5,15 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import Task from '../../../components/Task';
 import {useRouter} from 'next/router';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
+import {useQuery} from '@apollo/client';
+import {useEffect, useState} from 'react';
+import {gql} from '@apollo/client';
 // idk hwo to slug this yet fangzhe here xian
 function Taskboard() {
   const AddNewTask = () => {};
   const router = useRouter();
   const {id} = router.query;
+  const [allTasks, setAllTasks] = useState([]);
 
   const onDragEnd = (result) => {
     const {source, destination, draggableId} = result;
@@ -26,42 +30,67 @@ function Taskboard() {
     const start = source.droppableId;
     const end = destination.droppableId;
 
-    // if (start !== end && end === '1') {
-    //   fetch(`${process.env.REACT_APP_API_URL}/todo/complete/${id}`, {
-    //     method: 'PUT',
-    //     headers: {
-    //       'x-auth-token': localStorage.getItem('token'),
-    //     },
-    //   })
-    //     .then((res) => res.json())
-    //     .then((data) => {
-    //       Swal.fire({
-    //         icon: 'success',
-    //         title: data.msg,
-    //         showConfirmButton: false,
-    //         timer: 1500,
+    // getTask(id : String) : [Task]
+
+    //   if (start !== end && end === '1') {
+    //     fetch(`${process.env.REACT_APP_API_URL}/todo/complete/${id}`, {
+    //       method: 'PUT',
+    //       headers: {
+    //         'x-auth-token': localStorage.getItem('token'),
+    //       },
+    //     })
+    //       .then((res) => res.json())
+    //       .then((data) => {
+    //         Swal.fire({
+    //           icon: 'success',
+    //           title: data.msg,
+    //           showConfirmButton: false,
+    //           timer: 1500,
+    //         });
+    //         getTodos();
     //       });
-    //       getTodos();
-    //     });
-    // } else if (start !== end) {
-    //   fetch(`${process.env.REACT_APP_API_URL}/todo/complete/${id}`, {
-    //     method: 'PUT',
-    //     headers: {
-    //       'x-auth-token': localStorage.getItem('token'),
-    //     },
-    //   })
-    //     .then((res) => res.json())
-    //     .then((data) => {
-    //       Swal.fire({
-    //         icon: 'success',
-    //         title: data.msg,
-    //         showConfirmButton: false,
-    //         timer: 1500,
+    //   } else if (start !== end) {
+    //     fetch(`${process.env.REACT_APP_API_URL}/todo/complete/${id}`, {
+    //       method: 'PUT',
+    //       headers: {
+    //         'x-auth-token': localStorage.getItem('token'),
+    //       },
+    //     })
+    //       .then((res) => res.json())
+    //       .then((data) => {
+    //         Swal.fire({
+    //           icon: 'success',
+    //           title: data.msg,
+    //           showConfirmButton: false,
+    //           timer: 1500,
+    //         });
+    //         getTodos();
     //       });
-    //       getTodos();
-    //     });
-    // }
+    //   }
   };
+  const GET_ALL_TASKS = gql`
+    query getTask($id: String) {
+      getTask(id: $id) {
+        id
+        title
+        description
+        category
+      }
+    }
+  `;
+
+  const getAllTasks = useQuery(GET_ALL_TASKS, {
+    variables: {
+      id: id,
+    },
+  });
+
+  useEffect(() => {
+    setAllTasks(getAllTasks.data);
+  }, [allTasks]);
+
+  console.log(allTasks);
+  console.log('asljkdaskajsdljal');
 
   return (
     <>
@@ -82,9 +111,10 @@ function Taskboard() {
                         <Card.Title>To-Do</Card.Title>
 
                         <Draggable
-                        // key={todo._id}
-                        //  draggableId={todo._id}
-                        // index={index}
+                          // key={todo._id}
+                          draggableId="1"
+                          //  guohou wan change to task._id
+                          index="1"
                         >
                           {(provided, snapshot) => (
                             <Task
@@ -116,9 +146,10 @@ function Taskboard() {
                         <Card.Title>In Progress</Card.Title>
 
                         <Draggable
-                        // key={todo._id}
-                        //  draggableId={todo._id}
-                        // index={index}
+                          // key={todo._id}
+                          draggableId="2"
+                          index="2"
+                          // map then get index of task
                         >
                           {(provided, snapshot) => (
                             <Task
@@ -144,9 +175,9 @@ function Taskboard() {
                         <Card.Title>Done</Card.Title>
 
                         <Draggable
-                        // key={todo._id}
-                        //  draggableId={todo._id}
-                        // index={index}
+                          // key={todo._id}
+                          draggableId="3"
+                          index="3"
                         >
                           {(provided, snapshot) => (
                             <Task
