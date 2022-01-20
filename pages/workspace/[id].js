@@ -6,10 +6,9 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import {useState, useEffect} from 'react';
 import {gql, useQuery, useMutation} from '@apollo/client';
 import Router from 'next/router';
-import AddChannel from '../../components/partials/addChannel'
-import Chat from '../../components/partials/chat.js'
-import Swal from 'sweetalert2'
-
+import AddChannel from '../../components/partials/addChannel';
+import Chat from '../../components/partials/chat.js';
+import Swal from 'sweetalert2';
 
 function WorkspaceChat() {
   const router = useRouter();
@@ -197,14 +196,30 @@ function WorkspaceChat() {
                 Task Board
               </div>
 
-              <div className={styles.navLink} href="link-2">
-                <i
-                  className={'fas fa-caret-down ' + styles.icon}
-                  onClick={() => {
-                    showDropDown === true ? setShowDropDown(false) : setShowDropDown(true);
-                    setAddChannel(false);
-                  }}
-                ></i>
+              <div
+                className={`${styles.navLink} mb-3 `}
+                onClick={() => {
+                  showDropDown ? setShowDropDown(false) : setShowDropDown(true);
+                  setAddChannel(false);
+                }}
+              >
+                {showDropDown ? (
+                  <i
+                    className={'fas fa-caret-down ' + styles.icon}
+                    onClick={() => {
+                      showDropDown ? setShowDropDown(false) : setShowDropDown(true);
+                      setAddChannel(false);
+                    }}
+                  ></i>
+                ) : (
+                  <i
+                    className={'fas fa-caret-right ' + styles.icon}
+                    onClick={() => {
+                      showDropDown ? setShowDropDown(false) : setShowDropDown(true);
+                      setAddChannel(false);
+                    }}
+                  ></i>
+                )}
                 Channels
               </div>
               {showDropDown && (
@@ -250,8 +265,6 @@ function WorkspaceChat() {
   } else {
     return <h1>Loading...</h1>;
   }
-
-  
 }
 
 export default WorkspaceChat;

@@ -26,14 +26,14 @@ function UserModal(props) {
     }
   `;
 
-  const INVITE_USER = gql`
-    mutation InviteUserToWorkspace($userId: String, $workspaceId: String) {
-      inviteUserToWorkspace(workspace: {user_id: $userId, workspace_id: $workspaceId}) {
-        id
-        pending
+    const INVITE_USER = gql`
+      mutation InviteUserToWorkspace($userId: String, $workspaceId: String) {
+        inviteUserToWorkspace(workspace: {user_id: $userId, workspace_id: $workspaceId}) {
+          id
+          pending
+        }
       }
-    }
-  `;
+    `;
 
   const REMOVE_USER = gql`
     mutation RemoveUserFromWorkspace($userId: String, $workspaceId: String) {

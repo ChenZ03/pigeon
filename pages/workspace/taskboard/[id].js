@@ -5,18 +5,36 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import Task from '../../../components/Task';
 import {useRouter} from 'next/router';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
-import {useQuery} from '@apollo/client';
+import {useQuery, gql, useMutation} from '@apollo/client';
 import {useEffect, useState} from 'react';
-import {gql} from '@apollo/client';
-// idk hwo to slug this yet fangzhe here xian
+import TaskModal from '../../../components/modals/task';
+
 function Taskboard() {
-  const AddNewTask = () => {};
   const router = useRouter();
   const {id} = router.query;
   const [allTasks, setAllTasks] = useState([]);
-  const [todos, setTodos] = useState(null);
-  const [inProgress, setInProgress] = useState(null);
-  const [done, setDone] = useState(null);
+  const [todos, setTodos] = useState([]);
+  const [inProgress, setInProgress] = useState([]);
+  const [done, setDone] = useState([]);
+  const [modalShow, setModalShow] = useState(false);
+
+  const UPDATE_TASK = gql`
+    mutation changeTaskCat($id: ID, $category: String) {
+      changeTaskCat(task: {id: $id, category: $category}) {
+        id
+        title
+        description
+        assigns {
+          id
+          username
+        }
+      }
+    }
+  `;
+
+  const [update, updateData] = useMutation(UPDATE_TASK, {
+    onError: () => updateData.error,
+  });
 
   const onDragEnd = (result) => {
     const {source, destination, draggableId} = result;
@@ -32,7 +50,36 @@ function Taskboard() {
     const id = draggableId;
     const start = source.droppableId;
     const end = destination.droppableId;
+
+    if (start !== end) {
+      if (end === '0') {
+        update({
+          variables: {
+            id: id,
+            category: 'To do',
+          },
+        }).then();
+        getAllTasks.refetch();
+      } else if (end === '1') {
+        update({
+          variables: {
+            id: id,
+            category: 'in progress',
+          },
+        }).then();
+        getAllTasks.refetch();
+      } else if (end === '2') {
+        update({
+          variables: {
+            id: id,
+            category: 'done',
+          },
+        }).then();
+        getAllTasks.refetch();
+      }
+    }
   };
+
   const GET_ALL_TASKS = gql`
     query getTask($id: String) {
       getTask(id: $id) {
@@ -82,6 +129,12 @@ function Taskboard() {
     }
   }, [allTasks]);
 
+  useEffect(() => {
+    if (updateData.data) {
+      getAllTasks.refetch();
+    }
+  }, [updateData]);
+
   return (
     <>
       <MainNav />
@@ -100,7 +153,7 @@ function Taskboard() {
                       <Card className={styles.outerCard}>
                         <Card.Body>
                           <Card.Title>To-Do</Card.Title>
-                          {todos ? (
+                          {todos.length !== 0 ? (
                             todos.map((todo, index) => (
                               <Draggable key={todo._id} draggableId={todo.id} index={index}>
                                 {(provided, snapshot) => (
@@ -133,7 +186,7 @@ function Taskboard() {
                           )}
                           {provided.placeholder}
                           <Container>
-                            <Button className={styles.addButton} onClick={() => AddNewTask()}>
+                            <Button className={styles.addButton} onClick={() => setModalShow(true)}>
                               + Add New Task
                             </Button>
                           </Container>
@@ -145,6 +198,8 @@ function Taskboard() {
                 </Droppable>
               </Col>
 
+              <TaskModal show={modalShow} onHide={() => setModalShow(false)} />
+
               <Col lg="4">
                 <Droppable droppableId="1">
                   {(provided, snapshot) => (
@@ -153,7 +208,7 @@ function Taskboard() {
                         <Card.Body>
                           <Card.Title>In Progress</Card.Title>
 
-                          {inProgress ? (
+                          {inProgress.length !== 0 ? (
                             inProgress.map((doing, index) => (
                               <Draggable key={doing._id} draggableId={doing.id} index={index}>
                                 {(provided, snapshot) => (
@@ -200,7 +255,7 @@ function Taskboard() {
                         <Card.Body>
                           <Card.Title>Done</Card.Title>
 
-                          {done ? (
+                          {done.length !== 0 ? (
                             done.map((done, index) => (
                               <Draggable key={done._id} draggableId={done.id} index={index}>
                                 {(provided, snapshot) => (

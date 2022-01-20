@@ -68,3 +68,34 @@
   max-height: 200px;
   overflow-y: auto;
 }
+
+.formControl {
+  margin-bottom: 15px;
+  background-color: transparent;
+  border: transparent;
+  border-bottom: #9ec4e6 2px solid;
+}
+
+.formControl:focus {
+  margin-bottom: 15px;
+  background-color: transparent;
+  border: transparent;
+  border-bottom: #9ec4e6 2px solid;
+  box-shadow: none;
+}
+
+.width {
+  width: 500px;
+  min-width: 375px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.formButton {
+  background-color: #9ec4e6 !important;
+  color: white !important;
+  margin-top: 25px;
+  border: none;
+  width: 100px;
+  margin-left: 200px;
+}
