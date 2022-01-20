@@ -1,13 +1,15 @@
 import {Card, Col, Container} from 'react-bootstrap';
 import styles from '../styles/Taskboard.module.css';
 
-function Task() {
+function Task({data}) {
+  
   return (
     <Container>
       <Card className={`my-3 ${styles.taskCard}`}>
         <Card.Body>
-          <Card.Title>Card Title</Card.Title> {/*link*/}
-          <Card.Subtitle className="mb-2 text-muted">Card Subtitle</Card.Subtitle>
+          <Card.Title>{data.title}</Card.Title> 
+          {/* link */}
+          <Card.Subtitle className="mb-2 text-muted">{data.description}</Card.Subtitle>
           {/* <Card.Link href="#">Card Link</Card.Link>
                 <Card.Link href="#">Another Link</Card.Link> */}
         </Card.Body>

@@ -14,6 +14,9 @@ function Taskboard() {
   const router = useRouter();
   const {id} = router.query;
   const [allTasks, setAllTasks] = useState([]);
+  const [todos, setTodos] = useState(null);
+  const [inProgress, setInProgress] = useState([]);
+  const [done, setDone] = useState([]);
 
   const onDragEnd = (result) => {
     const {source, destination, draggableId} = result;
@@ -30,44 +33,43 @@ function Taskboard() {
     const start = source.droppableId;
     const end = destination.droppableId;
 
-    // getTask(id : String) : [Task]
-
-    //   if (start !== end && end === '1') {
-    //     fetch(`${process.env.REACT_APP_API_URL}/todo/complete/${id}`, {
-    //       method: 'PUT',
-    //       headers: {
-    //         'x-auth-token': localStorage.getItem('token'),
-    //       },
-    //     })
-    //       .then((res) => res.json())
-    //       .then((data) => {
-    //         Swal.fire({
-    //           icon: 'success',
-    //           title: data.msg,
-    //           showConfirmButton: false,
-    //           timer: 1500,
-    //         });
-    //         getTodos();
-    //       });
-    //   } else if (start !== end) {
-    //     fetch(`${process.env.REACT_APP_API_URL}/todo/complete/${id}`, {
-    //       method: 'PUT',
-    //       headers: {
-    //         'x-auth-token': localStorage.getItem('token'),
-    //       },
-    //     })
-    //       .then((res) => res.json())
-    //       .then((data) => {
-    //         Swal.fire({
-    //           icon: 'success',
-    //           title: data.msg,
-    //           showConfirmButton: false,
-    //           timer: 1500,
-    //         });
-    //         getTodos();
-    //       });
-    //   }
+    if (start !== end && end === '1') {
+      fetch(`${process.env.REACT_APP_API_URL}/todo/complete/${id}`, {
+        method: 'PUT',
+        headers: {
+          'x-auth-token': localStorage.getItem('token'),
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          Swal.fire({
+            icon: 'success',
+            title: data.msg,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          getTodos();
+        });
+    } else if (start !== end) {
+      fetch(`${process.env.REACT_APP_API_URL}/todo/complete/${id}`, {
+        method: 'PUT',
+        headers: {
+          'x-auth-token': localStorage.getItem('token'),
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          Swal.fire({
+            icon: 'success',
+            title: data.msg,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          getTodos();
+        });
+    }
   };
+
   const GET_ALL_TASKS = gql`
     query getTask($id: String) {
       getTask(id: $id) {
@@ -75,6 +77,7 @@ function Taskboard() {
         title
         description
         category
+        assigns
       }
     }
   `;
@@ -86,11 +89,26 @@ function Taskboard() {
   });
 
   useEffect(() => {
-    setAllTasks(getAllTasks.data);
-  }, [allTasks]);
+    if (getAllTasks.data) {
+      setAllTasks(getAllTasks.data.getTask);
+      let arr1 = [];
+      let arr2 = [];
+      let arr3 = [];
 
-  console.log(allTasks);
-  console.log('asljkdaskajsdljal');
+      for (let i = 0; i < allTasks.length; i++) {
+        if (allTasks[i].category === 'To do') {
+          arr1.push(allTasks[i]);
+        } else if (allTasks[i].category === 'in progress') {
+          arr2.push(allTasks[i]);
+        } else if (allTasks[i].category === 'done') {
+          arr3.push(allTasks[i]);
+        }
+      }
+      setTodos(arr1);
+      setInProgress(arr2);
+      setDone(arr3);
+    }
+  }, [getAllTasks]);
 
   return (
     <>
@@ -109,23 +127,31 @@ function Taskboard() {
                     <Card className={styles.outerCard} ref={provided.innerRef} {...provided.droppableProps}>
                       <Card.Body>
                         <Card.Title>To-Do</Card.Title>
-
-                        <Draggable
-                          // key={todo._id}
-                          draggableId="1"
-                          //  guohou wan change to task._id
-                          index="1"
-                        >
-                          {(provided, snapshot) => (
-                            <Task
-                              ref={provided.innerRef}
-                              // key={todo._id}
-                              // index={index}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                            />
-                          )}
-                        </Draggable>
+                        {todos ? (
+                          todos.map((todo, index) => (
+                            <Draggable key={todo._id} draggableId={todo._id} index={index}>
+                              {(provided, snapshot) => (
+                                <Task
+                                  ref={provided.innerRef}
+                                  key={todo._id}
+                                  index={index}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  data={todo}
+                                />
+                              )}
+                            </Draggable>
+                          ))
+                        ) : (
+                          <Container>
+                            <Card className={`my-3 ${styles.taskCard}`}>
+                              <Card.Body>
+                                <Card.Title>No tasks...</Card.Title>
+                              </Card.Body>
+                            </Card>
+                          </Container>
+                        )}
+                        {provided.placeholder}
                         <Container>
                           <Button className={styles.addButton} onClick={() => AddNewTask()}>
                             + Add New Task
@@ -145,23 +171,32 @@ function Taskboard() {
                       <Card.Body>
                         <Card.Title>In Progress</Card.Title>
 
-                        <Draggable
-                          // key={todo._id}
-                          draggableId="2"
-                          index="2"
-                          // map then get index of task
-                        >
-                          {(provided, snapshot) => (
-                            <Task
-                              ref={provided.innerRef}
-                              // key={todo._id}
-                              // index={index}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                            />
-                          )}
-                        </Draggable>
+                        {inProgress ? (
+                          inProgress.map((doing, index) => (
+                            <Draggable key={doing._id} draggableId={doing._id} index={index}>
+                              {(provided, snapshot) => (
+                                <Task
+                                  ref={provided.innerRef}
+                                  key={doing._id}
+                                  index={index}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  data={doing}
+                                />
+                              )}
+                            </Draggable>
+                          ))
+                        ) : (
+                          <Container>
+                            <Card className={`my-3 ${styles.taskCard}`}>
+                              <Card.Body>
+                                <Card.Title>No tasks...</Card.Title>
+                              </Card.Body>
+                            </Card>
+                          </Container>
+                        )}
                       </Card.Body>
+                      {provided.placeholder}
                     </Card>
                   )}
                 </Droppable>
@@ -174,22 +209,32 @@ function Taskboard() {
                       <Card.Body>
                         <Card.Title>Done</Card.Title>
 
-                        <Draggable
-                          // key={todo._id}
-                          draggableId="3"
-                          index="3"
-                        >
-                          {(provided, snapshot) => (
-                            <Task
-                              ref={provided.innerRef}
-                              // key={todo._id}
-                              // index={index}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                            />
-                          )}
-                        </Draggable>
+                        {done ? (
+                          done.map((done, index) => (
+                            <Draggable key={done._id} draggableId={done._id} index={index}>
+                              {(provided, snapshot) => (
+                                <Task
+                                  ref={provided.innerRef}
+                                  key={done._id}
+                                  index={index}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  data={done}
+                                />
+                              )}
+                            </Draggable>
+                          ))
+                        ) : (
+                          <Container>
+                            <Card className={`my-3 ${styles.taskCard}`}>
+                              <Card.Body>
+                                <Card.Title>No tasks...</Card.Title>
+                              </Card.Body>
+                            </Card>
+                          </Container>
+                        )}
                       </Card.Body>
+                      {provided.placeholder}
                     </Card>
                   )}
                   {/* Map ba */}
