@@ -6,14 +6,14 @@ import Task from '../../../components/Task';
 import {useRouter} from 'next/router';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import {useQuery} from '@apollo/client';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {gql} from '@apollo/client';
 // idk hwo to slug this yet fangzhe here xian
 function Taskboard() {
   const AddNewTask = () => {};
   const router = useRouter();
   const {id} = router.query;
-  const [allTasks, setAllTasks] = [];
+  const [allTasks, setAllTasks] = useState([]);
 
   const onDragEnd = (result) => {
     const {source, destination, draggableId} = result;
@@ -81,12 +81,14 @@ function Taskboard() {
 
   const getAllTasks = useQuery(GET_ALL_TASKS, {
     variables: {
-      id: {id},
+      id: id,
     },
   });
+
   useEffect(() => {
     setAllTasks(getAllTasks.data);
   }, [allTasks]);
+
   console.log(allTasks);
   console.log('asljkdaskajsdljal');
 
