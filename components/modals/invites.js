@@ -4,8 +4,6 @@ import Invites from '../Invites';
 import {useState, useEffect} from 'react';
 
 function InvitesModal(props) {
-  console.log(props.data);
-
   let showInvites = props.data.map((invite) => (
     <Invites key={invite.id} data={invite} declineinv={props.declineinv} acceptinv={props.acceptinv} />
   ));

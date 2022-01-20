@@ -15,8 +15,8 @@ function Taskboard() {
   const {id} = router.query;
   const [allTasks, setAllTasks] = useState([]);
   const [todos, setTodos] = useState(null);
-  const [inProgress, setInProgress] = useState([]);
-  const [done, setDone] = useState([]);
+  const [inProgress, setInProgress] = useState(null);
+  const [done, setDone] = useState(null);
 
   const onDragEnd = (result) => {
     const {source, destination, draggableId} = result;
@@ -32,44 +32,7 @@ function Taskboard() {
     const id = draggableId;
     const start = source.droppableId;
     const end = destination.droppableId;
-
-    if (start !== end && end === '1') {
-      fetch(`${process.env.REACT_APP_API_URL}/todo/complete/${id}`, {
-        method: 'PUT',
-        headers: {
-          'x-auth-token': localStorage.getItem('token'),
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          Swal.fire({
-            icon: 'success',
-            title: data.msg,
-            showConfirmButton: false,
-            timer: 1500,
-          });
-          getTodos();
-        });
-    } else if (start !== end) {
-      fetch(`${process.env.REACT_APP_API_URL}/todo/complete/${id}`, {
-        method: 'PUT',
-        headers: {
-          'x-auth-token': localStorage.getItem('token'),
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          Swal.fire({
-            icon: 'success',
-            title: data.msg,
-            showConfirmButton: false,
-            timer: 1500,
-          });
-          getTodos();
-        });
-    }
   };
-
   const GET_ALL_TASKS = gql`
     query getTask($id: String) {
       getTask(id: $id) {
@@ -77,7 +40,10 @@ function Taskboard() {
         title
         description
         category
-        assigns
+        assigns {
+          id
+          username
+        }
       }
     }
   `;
@@ -91,6 +57,11 @@ function Taskboard() {
   useEffect(() => {
     if (getAllTasks.data) {
       setAllTasks(getAllTasks.data.getTask);
+    }
+  }, [getAllTasks]);
+
+  useEffect(() => {
+    if (getAllTasks.data) {
       let arr1 = [];
       let arr2 = [];
       let arr3 = [];
@@ -104,11 +75,12 @@ function Taskboard() {
           arr3.push(allTasks[i]);
         }
       }
+
       setTodos(arr1);
       setInProgress(arr2);
       setDone(arr3);
     }
-  }, [getAllTasks]);
+  }, [allTasks]);
 
   return (
     <>
@@ -124,41 +96,50 @@ function Taskboard() {
               <Col lg="4">
                 <Droppable droppableId="0">
                   {(provided, snapshot) => (
-                    <Card className={styles.outerCard} ref={provided.innerRef} {...provided.droppableProps}>
-                      <Card.Body>
-                        <Card.Title>To-Do</Card.Title>
-                        {todos ? (
-                          todos.map((todo, index) => (
-                            <Draggable key={todo._id} draggableId={todo._id} index={index}>
-                              {(provided, snapshot) => (
-                                <Task
-                                  ref={provided.innerRef}
-                                  key={todo._id}
-                                  index={index}
-                                  {...provided.draggableProps}
-                                  {...provided.dragHandleProps}
-                                  data={todo}
-                                />
-                              )}
-                            </Draggable>
-                          ))
-                        ) : (
+                    <div ref={provided.innerRef} {...provided.droppableProps}>
+                      <Card className={styles.outerCard}>
+                        <Card.Body>
+                          <Card.Title>To-Do</Card.Title>
+                          {todos ? (
+                            todos.map((todo, index) => (
+                              <Draggable key={todo._id} draggableId={todo.id} index={index}>
+                                {(provided, snapshot) => (
+                                  <div
+                                    ref={provided.innerRef}
+                                    key={todo._id}
+                                    index={index}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                  >
+                                    <Task
+                                      key={todo._id}
+                                      index={index}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
+                                      data={todo}
+                                    />
+                                  </div>
+                                )}
+                              </Draggable>
+                            ))
+                          ) : (
+                            <Container>
+                              <Card className={`my-3 ${styles.taskCard}`}>
+                                <Card.Body>
+                                  <Card.Title>No tasks yet</Card.Title>
+                                </Card.Body>
+                              </Card>
+                            </Container>
+                          )}
+                          {provided.placeholder}
                           <Container>
-                            <Card className={`my-3 ${styles.taskCard}`}>
-                              <Card.Body>
-                                <Card.Title>No tasks...</Card.Title>
-                              </Card.Body>
-                            </Card>
+                            <Button className={styles.addButton} onClick={() => AddNewTask()}>
+                              + Add New Task
+                            </Button>
                           </Container>
-                        )}
-                        {provided.placeholder}
-                        <Container>
-                          <Button className={styles.addButton} onClick={() => AddNewTask()}>
-                            + Add New Task
-                          </Button>
-                        </Container>
-                      </Card.Body>
-                    </Card>
+                        </Card.Body>
+                      </Card>
+                    </div>
                   )}
                   {/* Map ba */}
                 </Droppable>
@@ -167,37 +148,46 @@ function Taskboard() {
               <Col lg="4">
                 <Droppable droppableId="1">
                   {(provided, snapshot) => (
-                    <Card className={styles.outerCard} ref={provided.innerRef} {...provided.droppableProps}>
-                      <Card.Body>
-                        <Card.Title>In Progress</Card.Title>
+                    <div ref={provided.innerRef} {...provided.droppableProps}>
+                      <Card className={styles.outerCard}>
+                        <Card.Body>
+                          <Card.Title>In Progress</Card.Title>
 
-                        {inProgress ? (
-                          inProgress.map((doing, index) => (
-                            <Draggable key={doing._id} draggableId={doing._id} index={index}>
-                              {(provided, snapshot) => (
-                                <Task
-                                  ref={provided.innerRef}
-                                  key={doing._id}
-                                  index={index}
-                                  {...provided.draggableProps}
-                                  {...provided.dragHandleProps}
-                                  data={doing}
-                                />
-                              )}
-                            </Draggable>
-                          ))
-                        ) : (
-                          <Container>
-                            <Card className={`my-3 ${styles.taskCard}`}>
-                              <Card.Body>
-                                <Card.Title>No tasks...</Card.Title>
-                              </Card.Body>
-                            </Card>
-                          </Container>
-                        )}
-                      </Card.Body>
-                      {provided.placeholder}
-                    </Card>
+                          {inProgress ? (
+                            inProgress.map((doing, index) => (
+                              <Draggable key={doing._id} draggableId={doing.id} index={index}>
+                                {(provided, snapshot) => (
+                                  <div
+                                    ref={provided.innerRef}
+                                    key={doing._id}
+                                    index={index}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                  >
+                                    <Task
+                                      key={doing._id}
+                                      index={index}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
+                                      data={doing}
+                                    />
+                                  </div>
+                                )}
+                              </Draggable>
+                            ))
+                          ) : (
+                            <Container>
+                              <Card className={`my-3 ${styles.taskCard}`}>
+                                <Card.Body>
+                                  <Card.Title>No tasks yet</Card.Title>
+                                </Card.Body>
+                              </Card>
+                            </Container>
+                          )}
+                        </Card.Body>
+                        {provided.placeholder}
+                      </Card>
+                    </div>
                   )}
                 </Droppable>
               </Col>
@@ -205,37 +195,46 @@ function Taskboard() {
               <Col lg="4">
                 <Droppable droppableId="2">
                   {(provided, snapshot) => (
-                    <Card className={styles.outerCard} ref={provided.innerRef} {...provided.droppableProps}>
-                      <Card.Body>
-                        <Card.Title>Done</Card.Title>
+                    <div ref={provided.innerRef} {...provided.droppableProps}>
+                      <Card className={styles.outerCard}>
+                        <Card.Body>
+                          <Card.Title>Done</Card.Title>
 
-                        {done ? (
-                          done.map((done, index) => (
-                            <Draggable key={done._id} draggableId={done._id} index={index}>
-                              {(provided, snapshot) => (
-                                <Task
-                                  ref={provided.innerRef}
-                                  key={done._id}
-                                  index={index}
-                                  {...provided.draggableProps}
-                                  {...provided.dragHandleProps}
-                                  data={done}
-                                />
-                              )}
-                            </Draggable>
-                          ))
-                        ) : (
-                          <Container>
-                            <Card className={`my-3 ${styles.taskCard}`}>
-                              <Card.Body>
-                                <Card.Title>No tasks...</Card.Title>
-                              </Card.Body>
-                            </Card>
-                          </Container>
-                        )}
-                      </Card.Body>
-                      {provided.placeholder}
-                    </Card>
+                          {done ? (
+                            done.map((done, index) => (
+                              <Draggable key={done._id} draggableId={done.id} index={index}>
+                                {(provided, snapshot) => (
+                                  <div
+                                    ref={provided.innerRef}
+                                    key={done._id}
+                                    index={index}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                  >
+                                    <Task
+                                      key={done._id}
+                                      index={index}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
+                                      data={done}
+                                    />
+                                  </div>
+                                )}
+                              </Draggable>
+                            ))
+                          ) : (
+                            <Container>
+                              <Card className={`my-3 ${styles.taskCard}`}>
+                                <Card.Body>
+                                  <Card.Title>No tasks yet</Card.Title>
+                                </Card.Body>
+                              </Card>
+                            </Container>
+                          )}
+                        </Card.Body>
+                        {provided.placeholder}
+                      </Card>
+                    </div>
                   )}
                   {/* Map ba */}
                 </Droppable>
