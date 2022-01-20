@@ -168,7 +168,7 @@
 .chats{
     width: 100%;
     height: 81%;
-    overflow-y : auto;
+    overflow-y : hidden;
 }
 
 .center{
