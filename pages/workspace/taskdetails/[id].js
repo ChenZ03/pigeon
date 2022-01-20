@@ -7,8 +7,8 @@ import Router from 'next/router';
 import Comments from '../../../components/Comments';
 
 function TaskDetails() {
-  const router = useRouter();
-  const {id} = router.query;
+  const Router = useRouter();
+  const {id} = Router.query;
   return (
     <>
       <WorkspaceNav />

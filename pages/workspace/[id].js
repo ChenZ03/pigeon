@@ -6,10 +6,10 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import {useState, useEffect} from 'react';
 import {gql, useQuery, useMutation} from '@apollo/client';
 import Router from 'next/router';
-import AddChannel from '../../components/partials/addChannel';
-import Chat from '../../components/partials/chat.js';
-import Swal from 'sweetalert2';
-import Head from 'next/head';
+import AddChannel from '../../components/partials/addChannel'
+import Chat from '../../components/partials/chat.js'
+import Swal from 'sweetalert2'
+
 
 function WorkspaceChat() {
   const router = useRouter();
@@ -250,6 +250,8 @@ function WorkspaceChat() {
   } else {
     return <h1>Loading...</h1>;
   }
+
+  
 }
 
 export default WorkspaceChat;
