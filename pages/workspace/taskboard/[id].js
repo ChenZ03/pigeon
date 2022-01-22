@@ -18,6 +18,27 @@ function Taskboard() {
   const [done, setDone] = useState([]);
   const [modalShow, setModalShow] = useState(false);
 
+  const GET_ALL_TASKS = gql`
+    query getTask($id: String) {
+      getTask(id: $id) {
+        id
+        title
+        description
+        category
+        assigns {
+          id
+          username
+        }
+      }
+    }
+  `;
+
+  const getAllTasks = useQuery(GET_ALL_TASKS, {
+    variables: {
+      id: id,
+    },
+  });
+
   const UPDATE_TASK = gql`
     mutation changeTaskCat($id: ID, $category: String) {
       changeTaskCat(task: {id: $id, category: $category}) {
@@ -33,6 +54,7 @@ function Taskboard() {
   `;
 
   const [update, updateData] = useMutation(UPDATE_TASK, {
+    refetchQueries: [{query: GET_ALL_TASKS}],
     onError: () => updateData.error,
   });
 
@@ -58,48 +80,24 @@ function Taskboard() {
             id: id,
             category: 'To do',
           },
-        }).then();
-        getAllTasks.refetch();
+        });
       } else if (end === '1') {
         update({
           variables: {
             id: id,
             category: 'in progress',
           },
-        }).then();
-        getAllTasks.refetch();
+        });
       } else if (end === '2') {
         update({
           variables: {
             id: id,
             category: 'done',
           },
-        }).then();
-        getAllTasks.refetch();
+        });
       }
     }
   };
-
-  const GET_ALL_TASKS = gql`
-    query getTask($id: String) {
-      getTask(id: $id) {
-        id
-        title
-        description
-        category
-        assigns {
-          id
-          username
-        }
-      }
-    }
-  `;
-
-  const getAllTasks = useQuery(GET_ALL_TASKS, {
-    variables: {
-      id: id,
-    },
-  });
 
   useEffect(() => {
     if (getAllTasks.data) {

@@ -11,7 +11,11 @@ function CenteredModal(props) {
     let workspace = document.getElementById('workspace').value;
     let userId = JSON.parse(localStorage.getItem('userData')).user.id;
     if (workspace.length < 1) {
-      alert('Workspace name must be at least one character');
+      Swal.fire(
+        'Error',
+        'Workspace name should be atleast 1 character',
+        'error'
+      )
     } else {
       createWorkspace({
         variables: {
