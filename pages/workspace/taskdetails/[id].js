@@ -125,7 +125,7 @@ function TaskDetails() {
                 <br />
                 <p>{"Date Created : " + Date(task.date).toString()}</p>
                 <p className="text-end">{"Created by : " + task.user.username}</p>
-                <p className="pt-5">{"Assign to : " + task.assigns.map(e => e.username).join(', ')}</p>
+                <p className="pt-5">{"Assigned to : " + task?.assigns?.map(e => e.username).join(', ')}</p>
               </div>
               <div>
                 <Card>

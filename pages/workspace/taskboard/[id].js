@@ -16,7 +16,7 @@ function Taskboard() {
   const [todos, setTodos] = useState([]);
   const [inProgress, setInProgress] = useState([]);
   const [done, setDone] = useState([]);
-  const [workspace , setWorkspace] = useState(null);
+  const [workspace, setWorkspace] = useState(null);
   const [modalShow, setModalShow] = useState(false);
 
   const GET_ALL_TASKS = gql`
@@ -157,7 +157,6 @@ function Taskboard() {
     }
   }, [workspaceData]);
 
-
   return (
     <>
       <MainNav />
@@ -209,13 +208,13 @@ function Taskboard() {
                           )}
                           {provided.placeholder}
                           <Container>
-                            {
-                              workspace && typeof(window) !== 'undefined' && workspace.owner == JSON.parse(localStorage.getItem('userData')).user.id &&
-                              <Button className={styles.addButton} onClick={() => setModalShow(true)}>
-                                + Add New Task
-                              </Button>
-                            }
-                           
+                            {workspace &&
+                              typeof window !== 'undefined' &&
+                              workspace.owner == JSON.parse(localStorage.getItem('userData')).user.id && (
+                                <Button className={styles.addButton} onClick={() => setModalShow(true)}>
+                                  + Add New Task
+                                </Button>
+                              )}
                           </Container>
                         </Card.Body>
                       </Card>

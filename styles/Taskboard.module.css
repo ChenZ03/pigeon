@@ -6,7 +6,7 @@
 .outerCard {
   border-radius: 20px;
   background-color: whitesmoke;
-  max-height: 7 0vh;
+  max-height: 72vh;
   overflow-y: auto;
 }
 
@@ -54,7 +54,7 @@
 
 .addButton:hover {
   background-color: white;
-  color: #9ec4e6;
+  color: #8ab3d6;
   border: 1px solid lightgray;
 }
 
@@ -98,4 +98,23 @@
   border: none;
   width: 100px;
   margin-left: 200px;
+}
+
+.assigned {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  background: #9ec4e6;
+  color: white;
+  text-align: center;
+  justify-content: end;
+  margin-left: 2px;
+  margin-bottom: 0;
+}
+
+.grouped {
+  display: flex;
+  justify-content: end;
+  margin-left: auto;
 }

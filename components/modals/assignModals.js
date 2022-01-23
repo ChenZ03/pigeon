@@ -152,7 +152,7 @@ function assignModal(props) {
                             ) : (
                                 <div className={styles.buttonAction}>
                                   <button className={`btn ${styles.remove}`} onClick={removeHandler(user.id)}>
-                                    REMOVE
+                                    Unassign
                                   </button>
                                 </div>
                             )}
