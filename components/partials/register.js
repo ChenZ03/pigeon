@@ -34,8 +34,7 @@ function Register({setLogin, loginHandler}) {
   const REGISTER = gql`
     mutation register($email: String!, $username: String!, $password: String!) {
       register(user: {email: $email, username: $username, password: $password}) {
-        email
-        username
+        token
       }
     }
   `;
@@ -81,10 +80,10 @@ function Register({setLogin, loginHandler}) {
     if(registerdata.data) {
       Swal.fire(
         'Register',
-        'Registered successfully, please proceed to login',
+        'Registered successfully',
         'success'
       )
-      setLogin(true)
+      loginHandler(registerdata.data.register.token)
     }
 
     if(registerdata.error){
@@ -93,6 +92,7 @@ function Register({setLogin, loginHandler}) {
         'Registration Failed',
         'error'
       )
+      console.log(registerdata.error)
     }
   }, [registerdata.data, registerdata.error])
 
