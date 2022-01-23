@@ -3,6 +3,7 @@ import {gql, useMutation} from '@apollo/client';
 import {Form, Button, Container} from 'react-bootstrap';
 import styles from '../../styles/Register.module.css';
 import jwt_decode from 'jwt-decode'
+import Swal from 'sweetalert2'
 
 function Register({setLogin, loginHandler}) {
   const [user, setUser] = useState({});
@@ -97,42 +98,44 @@ function Register({setLogin, loginHandler}) {
 
   
   useEffect(() => { 
-      const handleGoogleSignIn = async res => {
-          let decoded = jwt_decode(res.credential)  
-          googleLogin({
-            variables : {
-              email : decoded.email,
-              username : decoded.username
-            }
-          })
-      }
+    const handleGoogleSignIn = async res => {
+        let decoded = jwt_decode(res.credential)  
+        // console.log(decoded)
+        googleLogin({
+          variables : {
+            email : decoded.email,
+            username : decoded.given_name
+          }
+        })
+    }
 
-      const initializeGsi = _ => {
-          if(!window.google) return;
-        
-          window.google.accounts.id.initialize({
-          client_id: clientId,
-          callback: handleGoogleSignIn
-          });
-          window.google.accounts.id.renderButton(
-          btnDivRef.current,
-          { theme: "outline", size: "large" }  // customization attributes
-          );
+    const initializeGsi = _ => {
+        if(!window.google) return;
+      
+        window.google.accounts.id.initialize({
+        client_id: clientId,
+        callback: handleGoogleSignIn
+        });
+        window.google.accounts.id.renderButton(
+        btnDivRef.current,
+        { theme: "outline", size: "large" }  // customization attributes
+        );
 
-      }
+    }
 
-      const script = document.createElement('script')
-      script.src = "https://accounts.google.com/gsi/client"
-      script.onload = initializeGsi
-      script.async = true
-      script.id = 'google-script'
-      document.querySelector('head')?.appendChild(script)
+    const script = document.createElement('script')
+    script.src = "https://accounts.google.com/gsi/client"
+    script.onload = initializeGsi
+    script.async = true
+    script.id = 'google-script'
+    document.querySelector('head')?.appendChild(script)
 
-      return _ => {
-          document.getElementById("google-script")?.remove()
-          window.google?.accounts.id.cancel()
-      }
-  }, [])
+    return _ => {
+        document.getElementById("google-script")?.remove()
+        window.google?.accounts.id.cancel()
+    }
+}, [])
+
 
   return (
     <>
