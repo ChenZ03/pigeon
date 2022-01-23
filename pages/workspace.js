@@ -54,11 +54,11 @@ export default function Home() {
                   </Col>
                   <Col lg="6" className={styles.padding}>
                     <div className="mt-5 text-white ">
-                      <h2>Lorem Ipsum</h2>
+                      <h2>A virtual workspace for you.</h2>
                       <p>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto reiciendis quo illo nesciunt
-                        maxime autem fugiat recusandae sequi quam dolore accusamus quia ducimus, aut necessitatibus
-                        earum. Magnam, iure. Quia, quis.
+                        Through your workspace, you can now easily manage your team by separating them into different
+                        workspaces. Bring the right people together in channels to share ideas, make decisions, and move
+                        work forward with a common purpose and place!
                       </p>
                     </div>
 
