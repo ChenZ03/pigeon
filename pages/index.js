@@ -22,7 +22,7 @@ function Home() {
     Router.push('/workspace');
   };
 
-  if(typeof window !== 'undefined' && localStorage.hasOwnProperty('userData')){
+  if (typeof window !== 'undefined' && localStorage.hasOwnProperty('userData')) {
     Router.push('/workspace');
   }
 
@@ -38,11 +38,11 @@ function Home() {
               </Col>
               <Col lg="6" className={styles.padding}>
                 <div className="mt-5 text-white ">
-                  <h2>Lorem Ipsum</h2>
+                  <h2>The future of business communication.</h2>
                   <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto reiciendis quo illo nesciunt maxime
-                    autem fugiat recusandae sequi quam dolore accusamus quia ducimus, aut necessitatibus earum. Magnam,
-                    iure. Quia, quis.
+                    Bring your office with you on the go! You can now access your workspaces easily and communicate with
+                    your team to discuss about upcoming projects etc. Assign tasks to your team and keep track of your
+                    progress to increase workspace efficiency.
                   </p>
                 </div>
 

@@ -7,8 +7,8 @@ import Swal from 'sweetalert2'
 
 function Register({setLogin, loginHandler}) {
   const [user, setUser] = useState({});
-  const clientId = '137944324026-ku0kjalf18s7c9r7qfaum4amgcahjlh4.apps.googleusercontent.com'
-  const btnDivRef = useRef()
+  const clientId = '137944324026-ku0kjalf18s7c9r7qfaum4amgcahjlh4.apps.googleusercontent.com';
+  const btnDivRef = useRef();
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -19,11 +19,7 @@ function Register({setLogin, loginHandler}) {
       });
       e.target.reset();
     } else {
-      Swal.fire(
-        'Password',
-        'Password must be the same',
-        'error'
-      )
+      Swal.fire('Password', 'Password must be the same', 'error');
     }
   };
 
@@ -40,41 +36,32 @@ function Register({setLogin, loginHandler}) {
   `;
 
   const GOOGLELOGIN = gql`
-    mutation GoogleLogin($email : String!, $username: String!) {
-      googleLogin (user : {email : $email, username : $username}) {
+    mutation GoogleLogin($email: String!, $username: String!) {
+      googleLogin(user: {email: $email, username: $username}) {
         token
       }
     }
-  `
+  `;
 
-  const [register, registerdata] = useMutation(REGISTER,{
-    onError: () => registerdata.error
+  const [register, registerdata] = useMutation(REGISTER, {
+    onError: () => registerdata.error,
   });
 
   const [googleLogin, glogin] = useMutation(GOOGLELOGIN, {
-    onError: () => glogin.error
-  })
-
+    onError: () => glogin.error,
+  });
 
   // Google
   useEffect(() => {
-    if(glogin.error){
-      Swal.fire(
-        'Google Login',
-        glogin.error,
-        'error'
-      )
+    if (glogin.error) {
+      Swal.fire('Google Login', glogin.error, 'error');
     }
 
-    if(glogin.data){
-      Swal.fire(
-        'Google Login',
-        'Login Successfully',
-        'success'
-      )
-      loginHandler(glogin.data.googleLogin.token)
+    if (glogin.data) {
+      Swal.fire('Google Login', 'Login Successfully', 'success');
+      loginHandler(glogin.data.googleLogin.token);
     }
-  }, [glogin.data, glogin.error])
+  }, [glogin.data, glogin.error]);
 
   useEffect(() => {
     if(registerdata.data) {
@@ -140,62 +127,65 @@ function Register({setLogin, loginHandler}) {
   return (
     <>
       <div className={styles.container}>
-          <Form onSubmit={onSubmitHandler} className={styles.width}>
-            <Form.Group>
-              <Form.Label className={styles.formLabel}>Email address</Form.Label>
-              <Form.Control
-                className={styles.formControl}
-                type="email"
-                placeholder="name@example.com"
-                name="email"
-                onChange={onChangeHandler}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label className={styles.formLabel}>Username</Form.Label>
-              <Form.Control
-                className={styles.formControl}
-                type="text"
-                name="username"
-                placeholder="Username"
-                onChange={onChangeHandler}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label className={styles.formLabel}>Password</Form.Label>
-              <Form.Control
-                className={styles.formControl}
-                type="password"
-                name="password"
-                placeholder="Password"
-                onChange={onChangeHandler}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label className={styles.formLabel}>Confirm Password</Form.Label>
-              <Form.Control
-                className={styles.formControl}
-                type="password"
-                name="password2"
-                placeholder="Confirm Password"
-                onChange={onChangeHandler}
-              />
-            </Form.Group>
-            <small className="text-white">
-              Already have an account?{' '}
-              <a className={styles.atext} onClick={() => {
-                setLogin(true)
-              }}>
-                Sign in here
-              </a>
-            </small>
-            <Button type="submit" className={styles.formButton}>
-              Register
-            </Button>
-          </Form>
-          <div>
-            <div id="buttonDiv" className="d-flex justify-content-center p-3 m-3" ref={btnDivRef}></div>
-          </div>
+        <Form onSubmit={onSubmitHandler} className={styles.width}>
+          <Form.Group>
+            <Form.Label className={styles.formLabel}>Email address</Form.Label>
+            <Form.Control
+              className={styles.formControl}
+              type="email"
+              placeholder="name@example.com"
+              name="email"
+              onChange={onChangeHandler}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label className={styles.formLabel}>Username</Form.Label>
+            <Form.Control
+              className={styles.formControl}
+              type="text"
+              name="username"
+              placeholder="Username"
+              onChange={onChangeHandler}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label className={styles.formLabel}>Password</Form.Label>
+            <Form.Control
+              className={styles.formControl}
+              type="password"
+              name="password"
+              placeholder="Password"
+              onChange={onChangeHandler}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label className={styles.formLabel}>Confirm Password</Form.Label>
+            <Form.Control
+              className={styles.formControl}
+              type="password"
+              name="password2"
+              placeholder="Confirm Password"
+              onChange={onChangeHandler}
+            />
+          </Form.Group>
+          <small className="text-white">
+            Already have an account?{' '}
+            <a
+              className={styles.atext}
+              onClick={() => {
+                setLogin(true);
+              }}
+            >
+              Sign in here
+            </a>
+          </small>
+          <Button type="submit" className={styles.formButton}>
+            Register
+          </Button>
+        </Form>
+        <div>
+          <div id="buttonDiv" className="d-flex justify-content-center p-3 m-3" ref={btnDivRef}></div>
+        </div>
       </div>
     </>
   );
