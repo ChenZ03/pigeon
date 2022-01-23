@@ -7,12 +7,14 @@ import Comments from '../../../components/Comments';
 import {gql, useQuery, useMutation} from '@apollo/client';
 import {useState, useEffect} from 'react'
 import AssignModal from '../../../components/modals/assignModals'
+import EditModal from '../../../components/modals/editModal'
 
 
 function TaskDetails() {
   const Router = useRouter();
   const [task, setTask] = useState(null)
   const [modalShow, setModalShow] = useState(false);
+  const [modalShow2, setModalShow2] = useState(false);
   const {id} = Router.query;
 
   const GET_TASK_DETAILS = gql`
@@ -124,8 +126,19 @@ function TaskDetails() {
                 <h4 className={styles.font}>{task.description}</h4>
                 <br />
                 <p>{"Date Created : " + Date(task.date).toString()}</p>
-                <p className="text-end">{"Created by : " + task.user.username}</p>
-                <p className="pt-5">{"Assigned to : " + task?.assigns?.map(e => e.username).join(', ')}</p>
+                {
+                  task.workspace.owner == JSON.parse(localStorage.getItem('userData')).user.id ?
+                  <div className={styles.flex}>
+                    <button onClick={() => setModalShow2(true)} className={styles.button}>Edit Task</button>
+                    <p className="text-end">{"Created by : " + task.user.username}</p>
+                    <EditModal show={modalShow2} onHide={() => setModalShow2(false)} refetch={() => getTaskData.refetch()} task={task}/>
+                  </div>
+                  :
+                  <p className="text-end">{"Created by : " + task.user.username}</p>
+                }
+
+                <p className="pt-5">{"Status : " + task.category}</p>
+                <p className="pt-1">{"Assign to : " + task.assigns.map(e => e.username).join(', ')}</p>
               </div>
               <div>
                 <Card>
