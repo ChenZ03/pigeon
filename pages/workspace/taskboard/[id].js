@@ -16,6 +16,7 @@ function Taskboard() {
   const [todos, setTodos] = useState([]);
   const [inProgress, setInProgress] = useState([]);
   const [done, setDone] = useState([]);
+  const [workspace , setWorkspace] = useState(null);
   const [modalShow, setModalShow] = useState(false);
 
   const GET_ALL_TASKS = gql`
@@ -28,6 +29,9 @@ function Taskboard() {
         assigns {
           id
           username
+        }
+        workspace {
+          owner
         }
       }
     }
@@ -133,6 +137,27 @@ function Taskboard() {
     }
   }, [updateData]);
 
+  const GET_CURRENTSPACE = gql`
+    query GetCurrentWorkSpace($id: String) {
+      getCurrentWorkSpace(id: $id) {
+        owner
+      }
+    }
+  `;
+
+  const workspaceData = useQuery(GET_CURRENTSPACE, {
+    variables: {
+      id: id,
+    },
+  });
+
+  useEffect(() => {
+    if (workspaceData.data) {
+      setWorkspace(workspaceData.data.getCurrentWorkSpace);
+    }
+  }, [workspaceData]);
+
+
   return (
     <>
       <MainNav />
@@ -184,9 +209,13 @@ function Taskboard() {
                           )}
                           {provided.placeholder}
                           <Container>
-                            <Button className={styles.addButton} onClick={() => setModalShow(true)}>
-                              + Add New Task
-                            </Button>
+                            {
+                              workspace && typeof(window) !== 'undefined' && workspace.owner == JSON.parse(localStorage.getItem('userData')).user.id &&
+                              <Button className={styles.addButton} onClick={() => setModalShow(true)}>
+                                + Add New Task
+                              </Button>
+                            }
+                           
                           </Container>
                         </Card.Body>
                       </Card>

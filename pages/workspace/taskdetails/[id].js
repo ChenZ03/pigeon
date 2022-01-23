@@ -6,11 +6,13 @@ import {useRouter} from 'next/router';
 import Comments from '../../../components/Comments';
 import {gql, useQuery, useMutation} from '@apollo/client';
 import {useState, useEffect} from 'react'
-import Swal from 'sweetalert2'
+import AssignModal from '../../../components/modals/assignModals'
+
 
 function TaskDetails() {
   const Router = useRouter();
   const [task, setTask] = useState(null)
+  const [modalShow, setModalShow] = useState(false);
   const {id} = Router.query;
 
   const GET_TASK_DETAILS = gql`
@@ -36,6 +38,7 @@ function TaskDetails() {
           owner
           id
           name
+          users
         }
         user{
           id 
@@ -63,7 +66,6 @@ function TaskDetails() {
 
   const [addComment, addCommentData] = useMutation(ADD_COMMENT)
   
-
   useEffect(() => {
     if(getTaskData.data){
       setTask(getTaskData.data.getIndTask)
@@ -90,6 +92,7 @@ function TaskDetails() {
     }
   }, [addCommentData.data])
 
+
   return (
     <>
       {
@@ -100,7 +103,7 @@ function TaskDetails() {
           <Col lg="2">
             <Nav defaultActiveKey="/workspace" className={styles.sideNav}>
               <Navbar.Brand className={styles.navBrand}>{task.workspace.name}</Navbar.Brand>
-              <div className={styles.navLink} onClick={() => Router.push(`/workspace/taskboard/${id}`)}>
+              <div className={styles.navLink} onClick={() => Router.push(`/workspace/taskboard/${task.workspace.id}`)}>
                 <i className={'fas fa-tasks ' + styles.icon}></i>
                 Task Board
               </div>
@@ -109,9 +112,16 @@ function TaskDetails() {
           <Col lg="10">
             <Container>
               <div className="py-3">
-                <h2>{task.title}</h2>
+                <div className={styles.flex}>
+                  <h2>{task.title}</h2>
+                  {
+                    task.workspace.owner == JSON.parse(localStorage.getItem('userData')).user.id &&
+                    <button onClick={() => setModalShow(true)} className={styles.button}>Assign</button>
+                  }
+                  <AssignModal show={modalShow} onHide={() => setModalShow(false)} assigns={task.assigns} workspace={task.workspace.id} id={task.id} refetch={() => getTaskData.refetch()}/>
+                </div>
                 <br />
-                <h4>Description : {task.description}</h4>
+                <h4 className={styles.font}>{task.description}</h4>
                 <br />
                 <p>{"Date Created : " + Date(task.date).toString()}</p>
                 <p className="text-end">{"Created by : " + task.user.username}</p>
