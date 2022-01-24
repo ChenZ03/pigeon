@@ -7,14 +7,14 @@ import { getMainDefinition } from '@apollo/client/utilities';
 import { WebSocketLink } from '@apollo/client/link/ws';
 
 const wsLink = process.browser ? new WebSocketLink({ // if you instantiate in the server, the error will be thrown
-  uri: `ws://localhost:4000/graphql`,
+  uri: `ws://pigeon-server-wee.herokuapp.com/graphql`,
   options: {
     reconnect: true
   }
 }) : null;
 
 const httplink = new HttpLink({
-	uri: 'http://localhost:4000/graphql',
+	uri: 'https://pigeon-server-wee.herokuapp.com/graphql',
 	credentials: 'same-origin'
 });
 
