@@ -24,7 +24,7 @@ function AddChannel({channelList, setAddChannel, id, refetch}) {
             )
             return
         }
-        if(channelNameList.includes(channelName)){
+        if(channelList.includes(channelName)){
             Swal.fire(
                 "Error",
                 "Channel Exists in this workspace",
@@ -38,25 +38,7 @@ function AddChannel({channelList, setAddChannel, id, refetch}) {
                 workspace_id : id
             }
         })
-
-  const acceptHandler = () => {
-    let channelName = document.getElementById('channelName').value.toLowerCase();
-    console.log(channelName);
-    if (channelName?.length < 1) {
-      Swal.fire('Error', 'Name must be at least 1 character', 'error');
-      return;
     }
-    if (channelNameList.includes(channelName)) {
-      Swal.fire('Error', 'Channel Exists in this workspace', 'error');
-      return;
-    }
-    add({
-      variables: {
-        channel_name: channelName,
-        workspace_id: id,
-      },
-    });
-  };
 
   useEffect(() => {
         if(addData.data){
