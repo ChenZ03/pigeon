@@ -22,8 +22,7 @@ function AddChannel({channelList, setAddChannel, id , refetch}){
 
     const acceptHandler = () => {
         let channelName = document.getElementById('channelName').value.toLowerCase()
-        console.log(channelName)
-        if(channelName.length < 1){
+        if(channelName && channelName.length < 1){
             Swal.fire(
                 "Error",
                 "Name must be at least 1 character",
@@ -53,7 +52,15 @@ function AddChannel({channelList, setAddChannel, id , refetch}){
             setAddChannel(false)
             refetch()
         }
-    }, [addData])
+
+        if(addData.error){
+            Swal.fire(
+                "Error",
+                "Channel limit reached",
+                "error"
+            )
+        }
+    }, [addData.data, addData.error])
     return(
         <div className={styles.navLink3}>
             <input type="text" placeholder="Channel Name" className={styles.channelInput} id="channelName"/>
