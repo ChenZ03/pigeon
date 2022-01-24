@@ -72,7 +72,7 @@ function Chat({channel}){
     }, [fetchChat])
 
       const sendMsg = (e) => {  
-        e.preventDefault()
+        // e.preventDefault()
         let msg = document.getElementById('message').value
         if(msg.length < 1) return
         sendChat({
@@ -149,9 +149,11 @@ function Chat({channel}){
                 <form className={styles.msgBox} onSubmit={e => {
                     e.preventDefault();
                 }}>
-                  <input type="text" placeholder="Write Message..." className={styles.sendMsg} id="message" onSubmit={e => {
-                    e.preventDefault();
-                }}/>
+                  <input type="text" placeholder="Write Message..." className={styles.sendMsg} id="message" onKeyPress={e => {
+                    if(e.key == "Enter"){
+                      sendMsg()
+                    }
+                  }}/>
                   <i className={"far fa-paper-plane " + styles.sendIcon} onClick={sendMsg}></i>
                 </form>
               </div>
