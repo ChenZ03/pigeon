@@ -4,6 +4,10 @@ import {useEffect} from 'react';
 import Swal from 'sweetalert2';
 
 function AddChannel({channelList, setAddChannel, id, refetch}) {
+    let channelNameList = []
+    for(let i = 0; i < channelList.length; i++) {
+       channelNameList.push(channelList[i].name) 
+    }
   const AddChannel = gql`
     mutation AddChannel($channel_name: String, $workspace_id: String) {
       addChannel(workspace: {channel_name: $channel_name, workspace_id: $workspace_id}) {
@@ -12,7 +16,9 @@ function AddChannel({channelList, setAddChannel, id, refetch}) {
     }
   `;
 
-  const [add, addData] = useMutation(AddChannel);
+  const [add, addData] = useMutation(AddChannel, {
+      onError: () => addData.error,
+  });
 
     const acceptHandler = () => {
         let channelName = document.getElementById('channelName').value.toLowerCase()
@@ -24,7 +30,8 @@ function AddChannel({channelList, setAddChannel, id, refetch}) {
             )
             return
         }
-        if(channelList.includes(channelName)){
+        console.log(channelList)
+        if(channelNameList.includes(channelName)){
             Swal.fire(
                 "Error",
                 "Channel Exists in this workspace",
