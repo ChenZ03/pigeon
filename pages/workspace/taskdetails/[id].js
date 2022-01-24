@@ -150,7 +150,11 @@ function TaskDetails() {
                     <Row>
                       <Col lg="10">
                         <Form.Group>
-                          <Form.Control type="text" placeholder="Write a comment" id="comment" />
+                          <Form.Control type="text" placeholder="Write a comment" id="comment" onKeyPress={e => {
+                            if(e.key == "Enter"){
+                              commentHandler()
+                            }
+                          }} />
                         </Form.Group>
                       </Col>
                       <Col lg="2">
